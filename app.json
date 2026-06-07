@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Playonix-App",
-    "slug": "Playonix-App",
+    "name": "Playonix",
+    "slug": "Playonix",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/expo.icon/Assets/playonix.png",
     "scheme": "playonixapp",
     "userInterfaceStyle": "automatic",
     "ios": {
