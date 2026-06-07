@@ -1,12 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { FlatList, useWindowDimensions } from 'react-native';
+import { FlatList, useWindowDimensions, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SymbolView } from 'expo-symbols';
 import tw from 'twrnc';
 
 import { ThemedView } from '@/components/themed-view';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
 import { BottomTabInset } from '@/constants/theme';
 import { StatusBar } from 'expo-status-bar';
+import { useColorScheme, setColorSchemeOverride } from '@/hooks/use-color-scheme';
 
 const VIDEOS = [
   {
@@ -53,6 +55,7 @@ export default function HomeScreen() {
   const itemHeight = height - insets.top - insets.bottom - BottomTabInset;
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const scheme = useColorScheme();
 
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: any[] }) => {
     if (viewableItems.length > 0) {
@@ -64,9 +67,36 @@ export default function HomeScreen() {
     itemVisiblePercentThreshold: 50,
   }).current;
 
+  const toggleTheme = () => {
+    const nextScheme = scheme === 'dark' ? 'light' : 'dark';
+    setColorSchemeOverride(nextScheme);
+  };
+
+  const topMargin = insets.top > 0 ? insets.top + 8 : 16;
+
   return (
     <ThemedView style={tw`flex-1 bg-black`}>
       <StatusBar style="light" />
+
+      {/* Dark/Light Mode Toggle Button */}
+      <Pressable
+        onPress={toggleTheme}
+        style={({ pressed }) => [
+          tw`absolute right-4 z-50 w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
+          { top: topMargin },
+          pressed && tw`opacity-80`
+        ]}>
+        <SymbolView
+          tintColor="#ffffff"
+          name={{
+            ios: scheme === 'dark' ? 'sun.max.fill' : 'moon.fill',
+            android: scheme === 'dark' ? 'wb_sunny' : 'nights_stay',
+            web: scheme === 'dark' ? 'wb_sunny' : 'nights_stay'
+          }}
+          size={22}
+        />
+      </Pressable>
+
       <FlatList
         data={VIDEOS}
         keyExtractor={(item) => item.id}
