@@ -75,17 +75,35 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
 
         {/* Menu Items */}
         <View style={tw`gap-4`}>
+          {/* All Route */}
+          <Pressable
+            onPress={() => onSelectFilter('all')}
+            style={({ pressed }) => [
+              tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
+              activeFilter === 'all' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+              pressed && tw`opacity-70`,
+            ]}>
+            <Ionicons
+              name="grid-outline"
+              size={22}
+              color={activeFilter === 'all' ? '#fbbf24' : '#ffffff'}
+            />
+            <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'all' ? tw`text-amber-400` : tw`text-white`]}>
+              All
+            </ThemedText>
+          </Pressable>
+
           {/* Images Route */}
           <Pressable
             onPress={() => onSelectFilter('image')}
             style={({ pressed }) => [
-              tw`flex-col items-start gap-1 py-3 border-b border-white/5`,
+              tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
               activeFilter === 'image' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
               pressed && tw`opacity-70`,
             ]}>
             <Ionicons
               name="image-outline"
-              size={24}
+              size={22}
               color={activeFilter === 'image' ? '#fbbf24' : '#ffffff'}
             />
             <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'image' ? tw`text-amber-400` : tw`text-white`]}>
@@ -97,35 +115,17 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
           <Pressable
             onPress={() => onSelectFilter('video')}
             style={({ pressed }) => [
-              tw`flex-col items-start gap-1 py-3 border-b border-white/5`,
+              tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
               activeFilter === 'video' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
               pressed && tw`opacity-70`,
             ]}>
             <Ionicons
               name="videocam-outline"
-              size={24}
+              size={22}
               color={activeFilter === 'video' ? '#fbbf24' : '#ffffff'}
             />
             <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'video' ? tw`text-amber-400` : tw`text-white`]}>
               Videos
-            </ThemedText>
-          </Pressable>
-
-          {/* All Route */}
-          <Pressable
-            onPress={() => onSelectFilter('all')}
-            style={({ pressed }) => [
-              tw`flex-col items-start gap-1 py-3 border-b border-white/5`,
-              activeFilter === 'all' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
-              pressed && tw`opacity-70`,
-            ]}>
-            <Ionicons
-              name="grid-outline"
-              size={24}
-              color={activeFilter === 'all' ? '#fbbf24' : '#ffffff'}
-            />
-            <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'all' ? tw`text-amber-400` : tw`text-white`]}>
-              All
             </ThemedText>
           </Pressable>
 
@@ -140,12 +140,12 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
               onClose();
             }}
             style={({ pressed }) => [
-              tw`flex-col items-start gap-1 py-3 border-b border-white/5`,
+              tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
               pressed && tw`opacity-70`,
             ]}>
             <Ionicons
               name="globe-outline"
-              size={24}
+              size={22}
               color="#ffffff"
             />
             <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
