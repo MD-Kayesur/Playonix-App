@@ -8,11 +8,13 @@ import tw from 'twrnc';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useTheme } from '@/hooks/use-theme';
+import { useMenu } from '@/context/menu-context';
 
 export default function LoginScreen() {
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const { setIsLoggedIn } = useMenu();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,6 +34,7 @@ export default function LoginScreen() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      setIsLoggedIn(true); // Toggle global logged in state
       if (Platform.OS === 'web') {
         alert('Logged in successfully!');
       } else {

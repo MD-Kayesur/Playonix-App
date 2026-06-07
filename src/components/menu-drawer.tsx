@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import tw from 'twrnc';
 
 import { ThemedText } from '@/components/themed-text';
+import { useMenu } from '@/context/menu-context';
 
 interface MenuDrawerProps {
   visible: boolean;
@@ -19,6 +20,9 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const panelWidth = Math.min(SCREEN_WIDTH * 0.79, 1000);
+  
+  // Consume global login state from context
+  const { isLoggedIn, setIsLoggedIn } = useMenu();
   
   // Animation setup
   const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
@@ -61,6 +65,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
             width: panelWidth,
             transform: [{ translateX: slideAnim }],
             paddingTop: insets.top + 20,
+            paddingBottom: insets.bottom + 20,
           },
         ]}>
         {/* Header */}
@@ -75,113 +80,144 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
           </Pressable>
         </View>
 
-        {/* Menu Items */}
-        <View style={tw`gap-5`}>
-          {/* All Route */}
-          <Pressable
-            onPress={() => onSelectFilter('all')}
-            style={({ pressed }) => [
-              tw`py-3 border-b border-white/5`,
-              activeFilter === 'all' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
-              pressed && tw`opacity-70`,
-            ]}>
-            <View style={tw`flex-row items-center gap-4`}>
-              <Ionicons
-                name="grid-outline"
-                size={24}
-                color={activeFilter === 'all' ? '#fbbf24' : '#ffffff'}
-              />
-              <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'all' ? tw`text-amber-400` : tw`text-white`]}>
-                All
-              </ThemedText>
-            </View>
-          </Pressable>
+        {/* Content Container (flex-1 to push login/logout to the bottom) */}
+        <View style={tw`flex-1 justify-between`}>
+          {/* Main Menu Routes */}
+          <View style={tw`gap-5`}>
+            {/* All Route */}
+            <Pressable
+              onPress={() => onSelectFilter('all')}
+              style={({ pressed }) => [
+                tw`py-3 border-b border-white/5`,
+                activeFilter === 'all' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+                pressed && tw`opacity-70`,
+              ]}>
+              <View style={tw`flex-row items-center gap-4`}>
+                <Ionicons
+                  name="grid-outline"
+                  size={24}
+                  color={activeFilter === 'all' ? '#fbbf24' : '#ffffff'}
+                />
+                <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'all' ? tw`text-amber-400` : tw`text-white`]}>
+                  All
+                </ThemedText>
+              </View>
+            </Pressable>
 
-          {/* Photos Route */}
-          <Pressable
-            onPress={() => onSelectFilter('image')}
-            style={({ pressed }) => [
-              tw`py-3 border-b border-white/5`,
-              activeFilter === 'image' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
-              pressed && tw`opacity-70`,
-            ]}>
-            <View style={tw`flex-row items-center gap-4`}>
-              <Ionicons
-                name="image-outline"
-                size={24}
-                color={activeFilter === 'image' ? '#fbbf24' : '#ffffff'}
-              />
-              <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'image' ? tw`text-amber-400` : tw`text-white`]}>
-                Photos
-              </ThemedText>
-            </View>
-          </Pressable>
+            {/* Photos Route */}
+            <Pressable
+              onPress={() => onSelectFilter('image')}
+              style={({ pressed }) => [
+                tw`py-3 border-b border-white/5`,
+                activeFilter === 'image' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+                pressed && tw`opacity-70`,
+              ]}>
+              <View style={tw`flex-row items-center gap-4`}>
+                <Ionicons
+                  name="image-outline"
+                  size={24}
+                  color={activeFilter === 'image' ? '#fbbf24' : '#ffffff'}
+                />
+                <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'image' ? tw`text-amber-400` : tw`text-white`]}>
+                  Photos
+                </ThemedText>
+              </View>
+            </Pressable>
 
-          {/* Videos Route */}
-          <Pressable
-            onPress={() => onSelectFilter('video')}
-            style={({ pressed }) => [
-              tw`py-3 border-b border-white/5`,
-              activeFilter === 'video' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
-              pressed && tw`opacity-70`,
-            ]}>
-            <View style={tw`flex-row items-center gap-4`}>
-              <Ionicons
-                name="videocam-outline"
-                size={24}
-                color={activeFilter === 'video' ? '#fbbf24' : '#ffffff'}
-              />
-              <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'video' ? tw`text-amber-400` : tw`text-white`]}>
-                Videos
-              </ThemedText>
-            </View>
-          </Pressable>
+            {/* Videos Route */}
+            <Pressable
+              onPress={() => onSelectFilter('video')}
+              style={({ pressed }) => [
+                tw`py-3 border-b border-white/5`,
+                activeFilter === 'video' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+                pressed && tw`opacity-70`,
+              ]}>
+              <View style={tw`flex-row items-center gap-4`}>
+                <Ionicons
+                  name="videocam-outline"
+                  size={24}
+                  color={activeFilter === 'video' ? '#fbbf24' : '#ffffff'}
+                />
+                <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'video' ? tw`text-amber-400` : tw`text-white`]}>
+                  Videos
+                </ThemedText>
+              </View>
+            </Pressable>
 
-          {/* Language Route */}
-          <Pressable
-            onPress={() => {
-              if (Platform.OS === 'web') {
-                alert('Language clicked!');
-              } else {
-                Alert.alert('Language', 'Language route clicked!');
-              }
-              onClose();
-            }}
-            style={({ pressed }) => [
-              tw`py-3 border-b border-white/5`,
-              pressed && tw`opacity-70`,
-            ]}>
-            <View style={tw`flex-row items-center gap-4`}>
-              <Ionicons
-                name="globe-outline"
-                size={24}
-                color="#ffffff"
-              />
-              <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
-            </View>
-          </Pressable>
+            {/* Language Route */}
+            <Pressable
+              onPress={() => {
+                if (Platform.OS === 'web') {
+                  alert('Language clicked!');
+                } else {
+                  Alert.alert('Language', 'Language route clicked!');
+                }
+                onClose();
+              }}
+              style={({ pressed }) => [
+                tw`py-3 border-b border-white/5`,
+                pressed && tw`opacity-70`,
+              ]}>
+              <View style={tw`flex-row items-center gap-4`}>
+                <Ionicons
+                  name="globe-outline"
+                  size={24}
+                  color="#ffffff"
+                />
+                <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
+              </View>
+            </Pressable>
+          </View>
 
-          {/* Login Route */}
-          <Pressable
-            onPress={() => {
-              onClose();
-              setTimeout(() => {
-                router.push('/login');
-              }, 250);
-            }}
-            style={({ pressed }) => [
-              tw`py-3 border-b border-white/5`,
-              pressed && tw`opacity-70`,
-            ]}>
-            <View style={tw`flex-row items-center gap-4`}>
-              <Ionicons
-                name="log-in-outline"
-                size={24}
-                color="#ffffff"
-              />
-              <ThemedText style={tw`text-white text-base font-semibold`}>Login</ThemedText>
-            </View>
-          </Pressable>
+          {/* Bottom Action: Login or Logout */}
+          <View style={tw`mt-auto`}>
+            {isLoggedIn ? (
+              <Pressable
+                onPress={() => {
+                  setIsLoggedIn(false);
+                  onClose();
+                  if (Platform.OS === 'web') {
+                    alert('Logged out successfully!');
+                  } else {
+                    Alert.alert('Success', 'Logged out successfully!');
+                  }
+                }}
+                style={({ pressed }) => [
+                  tw`py-3 border-t border-white/5`,
+                  pressed && tw`opacity-70`,
+                ]}>
+                <View style={tw`flex-row items-center gap-4`}>
+                  <Ionicons
+                    name="log-out-outline"
+                    size={24}
+                    color="#ef4444"
+                  />
+                  <ThemedText style={tw`text-red-500 text-base font-semibold`}>Logout</ThemedText>
+                </View>
+              </Pressable>
+            ) : (
+              <Pressable
+                onPress={() => {
+                  onClose();
+                  setTimeout(() => {
+                    router.push('/login');
+                  }, 250);
+                }}
+                style={({ pressed }) => [
+                  tw`py-3 border-t border-white/5`,
+                  pressed && tw`opacity-70`,
+                ]}>
+                <View style={tw`flex-row items-center gap-4`}>
+                  <Ionicons
+                    name="log-in-outline"
+                    size={24}
+                    color="#ffffff"
+                  />
+                  <ThemedText style={tw`text-white text-base font-semibold`}>Login</ThemedText>
+                </View>
+              </Pressable>
+            )}
+          </View>
         </View>
       </Animated.View>
     </View>
