@@ -1,56 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
-import tw from 'twrnc';
-
-import { MenuDrawer } from '@/components/menu-drawer';
+import { useEffect } from 'react';
+import { useRouter, useNavigation } from 'expo-router';
+import { useMenu } from '@/context/menu-context';
 import { ThemedView } from '@/components/themed-view';
+import tw from 'twrnc';
 
 export default function MenuTabScreen() {
   const router = useRouter();
   const navigation = useNavigation();
-  const params = useLocalSearchParams<{ filter?: 'all' | 'video' | 'image' }>();
-  const activeFilter = params.filter ?? 'all';
+  const { setMenuVisible } = useMenu();
 
-  const [visible, setVisible] = useState(false);
-
-  // Use navigation focus/blur listeners to trigger drawer visibility
   useEffect(() => {
-    const unsubscribeFocus = navigation.addListener('focus', () => setVisible(true));
-    const unsubscribeBlur = navigation.addListener('blur', () => setVisible(false));
-    return () => {
-      unsubscribeFocus();
-      unsubscribeBlur();
-    };
-  }, [navigation]);
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      // Set the global state to open the drawer overlay
+      setMenuVisible(true);
+      // Immediately redirect back to the home feed
+      router.replace('/');
+    });
+    return unsubscribeFocus;
+  }, [navigation, setMenuVisible]);
 
-  const handleClose = () => {
-    setVisible(false);
-    setTimeout(() => {
-      router.replace({
-        pathname: '/',
-        params: { filter: activeFilter },
-      });
-    }, 250);
-  };
-
-  const handleSelectFilter = (filter: 'all' | 'video' | 'image') => {
-    setVisible(false);
-    setTimeout(() => {
-      router.replace({
-        pathname: '/',
-        params: { filter },
-      });
-    }, 250);
-  };
-
-  return (
-    <ThemedView style={tw`flex-1 bg-black`}>
-      <MenuDrawer
-        visible={visible}
-        onClose={handleClose}
-        activeFilter={activeFilter}
-        onSelectFilter={handleSelectFilter}
-      />
-    </ThemedView>
-  );
+  return <ThemedView style={tw`flex-1 bg-black`} />;
 }

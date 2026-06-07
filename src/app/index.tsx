@@ -2,11 +2,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRef, useState, useEffect } from 'react';
 import { FlatList, Pressable, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useLocalSearchParams } from 'expo-router';
 import tw from 'twrnc';
 
 import { ThemedView } from '@/components/themed-view';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
+import { MenuDrawer } from '@/components/menu-drawer';
+import { useMenu } from '@/context/menu-context';
 import { setColorSchemeOverride, useColorScheme } from '@/hooks/use-color-scheme';
 import { VIDEOS } from '@/data/video-data';
 import { StatusBar } from 'expo-status-bar';
@@ -19,9 +20,8 @@ export default function HomeScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const scheme = useColorScheme();
 
-  // Read the filter parameter from the route search params
-  const params = useLocalSearchParams<{ filter?: 'all' | 'video' | 'image' }>();
-  const filter = params.filter ?? 'all';
+  // Consume the global menu state from context
+  const { menuVisible, setMenuVisible, filter, setFilter } = useMenu();
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -99,6 +99,17 @@ export default function HomeScreen() {
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         decelerationRate="fast"
+      />
+
+      {/* Render MenuDrawer overlay directly on top of the HomeScreen */}
+      <MenuDrawer
+        visible={menuVisible}
+        onClose={() => setMenuVisible(false)}
+        activeFilter={filter}
+        onSelectFilter={(newFilter) => {
+          setFilter(newFilter);
+          setMenuVisible(false);
+        }}
       />
     </ThemedView>
   );
