@@ -5,6 +5,7 @@ import tw from 'twrnc';
 
 import { ThemedView } from '@/components/themed-view';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { BottomTabInset } from '@/constants/theme';
 import { StatusBar } from 'expo-status-bar';
 
@@ -67,6 +68,7 @@ export default function HomeScreen() {
   return (
     <ThemedView style={tw`flex-1 bg-black`}>
       <StatusBar style="light" />
+      <ThemeToggle />
       <FlatList
         data={VIDEOS}
         keyExtractor={(item) => item.id}
