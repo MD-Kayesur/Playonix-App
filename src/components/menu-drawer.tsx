@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, Animated, Platform, Pressable, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 import tw from 'twrnc';
 
 import { ThemedText } from '@/components/themed-text';
@@ -16,13 +15,12 @@ interface MenuDrawerProps {
 }
 
 export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: MenuDrawerProps) {
-  const router = useRouter();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const panelWidth = Math.min(SCREEN_WIDTH * 0.79, 1000);
   
-  // Consume global login state from context
-  const { isLoggedIn, setIsLoggedIn } = useMenu();
+  // Consume global authentication and visibility state
+  const { isLoggedIn, setIsLoggedIn, setLoginVisible } = useMenu();
   
   // Animation setup
   const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
@@ -200,7 +198,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
                 onPress={() => {
                   onClose();
                   setTimeout(() => {
-                    router.push('/login');
+                    setLoginVisible(true);
                   }, 250);
                 }}
                 style={({ pressed }) => [

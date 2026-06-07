@@ -1,25 +1,29 @@
-import { DarkTheme, DefaultTheme, ThemeProvider, usePathname } from 'expo-router';
+import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import { useColorScheme } from 'react-native';
 
 import '../global.css';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import AppTabs from '@/components/app-tabs';
-import { MenuProvider } from '@/context/menu-context';
+import { MenuProvider, useMenu } from '@/context/menu-context';
 import LoginScreen from './login';
 
-export default function TabLayout() {
+function AppContent() {
   const colorScheme = useColorScheme();
-  const pathname = usePathname();
-
-  const isLoginPage = pathname === '/login';
+  const { loginVisible } = useMenu();
 
   return (
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <AnimatedSplashOverlay />
+      {loginVisible ? <LoginScreen /> : <AppTabs />}
+    </ThemeProvider>
+  );
+}
+
+export default function TabLayout() {
+  return (
     <MenuProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <AnimatedSplashOverlay />
-        {isLoginPage ? <LoginScreen /> : <AppTabs />}
-      </ThemeProvider>
+      <AppContent />
     </MenuProvider>
   );
 }

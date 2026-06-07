@@ -7,6 +7,8 @@ interface MenuContextType {
   setFilter: (filter: 'all' | 'video' | 'image') => void;
   isLoggedIn: boolean;
   setIsLoggedIn: (loggedIn: boolean) => void;
+  loginVisible: boolean;
+  setLoginVisible: (visible: boolean) => void;
 }
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
@@ -15,6 +17,7 @@ export function MenuProvider({ children }: { children: React.ReactNode }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [filter, setFilter] = useState<'all' | 'video' | 'image'>('all');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginVisible, setLoginVisible] = useState(false);
 
   return (
     <MenuContext.Provider
@@ -25,6 +28,8 @@ export function MenuProvider({ children }: { children: React.ReactNode }) {
         setFilter,
         isLoggedIn,
         setIsLoggedIn,
+        loginVisible,
+        setLoginVisible,
       }}>
       {children}
     </MenuContext.Provider>

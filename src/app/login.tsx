@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, TextInput, Pressable, Alert, Platform, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import tw from 'twrnc';
 
 import { ThemedText } from '@/components/themed-text';
@@ -11,10 +10,9 @@ import { useTheme } from '@/hooks/use-theme';
 import { useMenu } from '@/context/menu-context';
 
 export default function LoginScreen() {
-  const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { setIsLoggedIn } = useMenu();
+  const { setIsLoggedIn, setLoginVisible } = useMenu();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,12 +33,12 @@ export default function LoginScreen() {
     setTimeout(() => {
       setLoading(false);
       setIsLoggedIn(true); // Toggle global logged in state
+      setLoginVisible(false); // Close login screen
       if (Platform.OS === 'web') {
         alert('Logged in successfully!');
       } else {
         Alert.alert('Success', 'Logged in successfully!');
       }
-      router.replace('/');
     }, 1200);
   };
 
@@ -50,7 +48,7 @@ export default function LoginScreen() {
         {/* Header with Back Button */}
         <View style={tw`flex-row items-center justify-between mb-8`}>
           <Pressable
-            onPress={() => router.back()}
+            onPress={() => setLoginVisible(false)}
             style={({ pressed }) => [
               tw`p-2 bg-neutral-800/40 rounded-full border border-neutral-700/30`,
               pressed && tw`opacity-70`,
