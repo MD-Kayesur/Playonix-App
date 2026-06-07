@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, Animated, Platform, Pressable, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import tw from 'twrnc';
 
 import { ThemedText } from '@/components/themed-text';
@@ -14,6 +15,7 @@ interface MenuDrawerProps {
 }
 
 export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: MenuDrawerProps) {
+  const router = useRouter();
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const panelWidth = Math.min(SCREEN_WIDTH * 0.79, 1000);
@@ -156,6 +158,28 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
                 color="#ffffff"
               />
               <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
+            </View>
+          </Pressable>
+
+          {/* Login Route */}
+          <Pressable
+            onPress={() => {
+              onClose();
+              setTimeout(() => {
+                router.push('/login');
+              }, 250);
+            }}
+            style={({ pressed }) => [
+              tw`py-3 border-b border-white/5`,
+              pressed && tw`opacity-70`,
+            ]}>
+            <View style={tw`flex-row items-center gap-4`}>
+              <Ionicons
+                name="log-in-outline"
+                size={24}
+                color="#ffffff"
+              />
+              <ThemedText style={tw`text-white text-base font-semibold`}>Login</ThemedText>
             </View>
           </Pressable>
         </View>
