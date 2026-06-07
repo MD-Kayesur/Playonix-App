@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter, useNavigation } from 'expo-router';
 import { useMenu } from '@/context/menu-context';
-import { ThemedView } from '@/components/themed-view';
+import { ThemedView } from '@/components/theme/themed-view';
 import tw from 'twrnc';
 
 export default function MenuTabScreen() {

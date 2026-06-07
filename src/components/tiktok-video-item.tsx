@@ -6,7 +6,7 @@ import { useVideoPlayer, VideoView } from 'expo-video';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
-import { ThemedText } from '@/components/themed-text';
+import { ThemedText } from '@/components/theme/themed-text';
 import { BottomTabInset } from '@/constants/theme';
 
 interface TikTokVideoItemProps {

@@ -3,7 +3,7 @@ import { useColorScheme, View, StyleSheet } from 'react-native';
 
 import '../global.css';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { AnimatedSplashOverlay } from '@/components/animations/animated-icon';
 import AppTabs from '@/components/app-tabs';
 import { MenuProvider, useMenu } from '@/context/menu-context';
 import LoginScreen from './login';

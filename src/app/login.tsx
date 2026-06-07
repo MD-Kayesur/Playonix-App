@@ -4,8 +4,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { ThemedText } from '@/components/theme/themed-text';
+import { ThemedView } from '@/components/theme/themed-view';
 import { useTheme } from '@/hooks/use-theme';
 import { useMenu } from '@/context/menu-context';
 

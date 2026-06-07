@@ -2,8 +2,8 @@ import { version } from 'expo/package.json';
 import { Image } from 'expo-image';
 import { useColorScheme, StyleSheet } from 'react-native';
 
-import { ThemedText } from './themed-text';
-import { ThemedView } from './themed-view';
+import { ThemedText } from '@/components/theme/themed-text';
+import { ThemedView } from '@/components/theme/themed-view';
 
 import { Spacing } from '@/constants/theme';
 
@@ -15,6 +15,7 @@ export function WebBadge() {
       <ThemedText type="code" themeColor="textSecondary" style={styles.versionText}>
         v{version}
       </ThemedText>
+      
       <Image
         source={
           scheme === 'dark'

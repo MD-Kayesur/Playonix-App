@@ -4,7 +4,7 @@ import { FlatList, Pressable, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
-import { ThemedView } from '@/components/themed-view';
+import { ThemedView } from '@/components/theme/themed-view';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
 import { MenuDrawer } from '@/components/menu-drawer';
 import { useMenu } from '@/context/menu-context';
