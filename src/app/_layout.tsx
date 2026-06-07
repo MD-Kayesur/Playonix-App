@@ -1,5 +1,5 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, View, StyleSheet } from 'react-native';
 
 import '../global.css';
 
@@ -15,7 +15,14 @@ function AppContent() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AnimatedSplashOverlay />
-      {loginVisible ? <LoginScreen /> : <AppTabs />}
+      <View style={{ flex: 1 }}>
+        <AppTabs />
+        {loginVisible && (
+          <View style={[StyleSheet.absoluteFill, { zIndex: 9999 }]}>
+            <LoginScreen />
+          </View>
+        )}
+      </View>
     </ThemeProvider>
   );
 }
