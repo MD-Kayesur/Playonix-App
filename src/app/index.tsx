@@ -1,4 +1,4 @@
-import { SymbolView } from 'expo-symbols';
+import { Ionicons } from '@expo/vector-icons';
 import { useRef, useState } from 'react';
 import { FlatList, Pressable, useWindowDimensions, Platform, Alert, View, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -19,10 +19,20 @@ export default function HomeScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const scheme = useColorScheme();
 
+  // Filtering State
+  const [filter, setFilter] = useState<'all' | 'video' | 'image'>('all');
+  const flatListRef = useRef<FlatList>(null);
+
   // Menu Drawer State and Animation (Left side slide-in)
   const [menuVisible, setMenuVisible] = useState(false);
   const panelWidth = Math.min(SCREEN_WIDTH * 0.75, 300);
   const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
+
+  // Filter VIDEOS list based on active filter state
+  const filteredVideos = VIDEOS.filter((item) => {
+    if (filter === 'all') return true;
+    return item.type === filter;
+  });
 
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: any[] }) => {
     if (viewableItems.length > 0) {
@@ -59,6 +69,15 @@ export default function HomeScreen() {
     });
   };
 
+  const handleSelectFilter = (newFilter: 'all' | 'video' | 'image') => {
+    setFilter(newFilter);
+    setActiveIndex(0);
+    setTimeout(() => {
+      flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
+    }, 50);
+    closeMenu();
+  };
+
   const topMargin = insets.top > 0 ? insets.top + 8 : 16;
 
   return (
@@ -71,14 +90,10 @@ export default function HomeScreen() {
         <Pressable
           onPress={toggleTheme}
           style={({ pressed }) => [tw`items-center justify-center`, pressed && tw`opacity-80`]}>
-          <SymbolView
-            tintColor="#ffffff"
-            name={{
-              ios: scheme === 'dark' ? 'sun.max.fill' : 'moon.fill',
-              android: scheme === 'dark' ? 'wb_sunny' : 'nights_stay',
-              web: scheme === 'dark' ? 'wb_sunny' : 'nights_stay'
-            }}
-            size={22}
+          <Ionicons
+            name={scheme === 'dark' ? 'sunny' : 'moon'}
+            size={24}
+            color="#ffffff"
           />
         </Pressable>
 
@@ -86,20 +101,17 @@ export default function HomeScreen() {
         <Pressable
           onPress={openMenu}
           style={({ pressed }) => [tw`items-center justify-center`, pressed && tw`opacity-80`]}>
-          <SymbolView
-            tintColor="#ffffff"
-            name={{
-              ios: 'line.3.horizontal',
-              android: 'menu',
-              web: 'menu'
-            }}
-            size={22}
+          <Ionicons
+            name="menu"
+            size={24}
+            color="#ffffff"
           />
         </Pressable>
       </View>
 
       <FlatList
-        data={VIDEOS}
+        ref={flatListRef}
+        data={filteredVideos}
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => (
           <TikTokVideoItem
@@ -148,10 +160,10 @@ export default function HomeScreen() {
             <View style={tw`flex-row justify-between items-center mb-8`}>
               <ThemedText style={tw`text-white font-bold text-lg`}>Menu</ThemedText>
               <Pressable onPress={closeMenu} style={tw`p-1`}>
-                <SymbolView
-                  tintColor="#ffffff"
-                  name={{ ios: 'xmark', android: 'close', web: 'close' }}
+                <Ionicons
+                  name="close"
                   size={24}
+                  color="#ffffff"
                 />
               </Pressable>
             </View>
@@ -160,66 +172,45 @@ export default function HomeScreen() {
             <View style={tw`gap-4`}>
               {/* Images Route */}
               <Pressable
-                onPress={() => {
-                  if (Platform.OS === 'web') {
-                    alert('Images clicked!');
-                  } else {
-                    Alert.alert('Images', 'Images route clicked!');
-                  }
-                  closeMenu();
-                }}
+                onPress={() => handleSelectFilter('image')}
                 style={({ pressed }) => [
                   tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
                   pressed && tw`opacity-70`,
                 ]}>
-                <SymbolView
-                  tintColor="#ffffff"
-                  name={{ ios: 'photo', android: 'image', web: 'image' }}
+                <Ionicons
+                  name="image-outline"
                   size={22}
+                  color="#ffffff"
                 />
                 <ThemedText style={tw`text-white text-base font-semibold`}>Images</ThemedText>
               </Pressable>
 
               {/* Videos Route */}
               <Pressable
-                onPress={() => {
-                  if (Platform.OS === 'web') {
-                    alert('Videos clicked!');
-                  } else {
-                    Alert.alert('Videos', 'Videos route clicked!');
-                  }
-                  closeMenu();
-                }}
+                onPress={() => handleSelectFilter('video')}
                 style={({ pressed }) => [
                   tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
                   pressed && tw`opacity-70`,
                 ]}>
-                <SymbolView
-                  tintColor="#ffffff"
-                  name={{ ios: 'video', android: 'videocam', web: 'videocam' }}
+                <Ionicons
+                  name="videocam-outline"
                   size={22}
+                  color="#ffffff"
                 />
                 <ThemedText style={tw`text-white text-base font-semibold`}>Videos</ThemedText>
               </Pressable>
 
               {/* All Route */}
               <Pressable
-                onPress={() => {
-                  if (Platform.OS === 'web') {
-                    alert('All clicked!');
-                  } else {
-                    Alert.alert('All', 'All route clicked!');
-                  }
-                  closeMenu();
-                }}
+                onPress={() => handleSelectFilter('all')}
                 style={({ pressed }) => [
                   tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
                   pressed && tw`opacity-70`,
                 ]}>
-                <SymbolView
-                  tintColor="#ffffff"
-                  name={{ ios: 'square.grid.2x2', android: 'grid_view', web: 'grid_view' }}
+                <Ionicons
+                  name="grid-outline"
                   size={22}
+                  color="#ffffff"
                 />
                 <ThemedText style={tw`text-white text-base font-semibold`}>All</ThemedText>
               </Pressable>
@@ -238,10 +229,10 @@ export default function HomeScreen() {
                   tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
                   pressed && tw`opacity-70`,
                 ]}>
-                <SymbolView
-                  tintColor="#ffffff"
-                  name={{ ios: 'globe', android: 'language', web: 'language' }}
+                <Ionicons
+                  name="globe-outline"
                   size={22}
+                  color="#ffffff"
                 />
                 <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
               </Pressable>

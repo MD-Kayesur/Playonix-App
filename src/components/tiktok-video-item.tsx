@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Pressable, Platform, Alert, Image } from 'react-native';
 import { useNavigation } from 'expo-router';
-import { SymbolView } from 'expo-symbols';
+import { Ionicons } from '@expo/vector-icons';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
@@ -111,10 +111,10 @@ export function TikTokVideoItem({
           <View style={tw`gap-0.5`}>
             <ThemedText style={tw`text-white font-bold text-base`}>{username}</ThemedText>
             <View style={tw`flex-row items-center gap-1`}>
-              <SymbolView
-                tintColor="#fbbf24"
-                name={{ ios: 'star.fill', android: 'star', web: 'star' }}
+              <Ionicons
+                name="star"
                 size={14}
+                color="#fbbf24"
               />
               <ThemedText style={tw`text-neutral-300 text-xs font-semibold`}>{rating}</ThemedText>
             </View>
@@ -144,10 +144,10 @@ export function TikTokVideoItem({
           </ThemedText>
           <Pressable style={tw`flex-row items-center gap-1`}>
             <ThemedText style={tw`text-neutral-400 text-xs font-bold`}>See More</ThemedText>
-            <SymbolView
-              tintColor="#a3a3a3"
-              name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }}
+            <Ionicons
+              name="chevron-forward"
               size={12}
+              color="#a3a3a3"
             />
           </Pressable>
         </View>
@@ -160,14 +160,10 @@ export function TikTokVideoItem({
         {/* Rating / Star Button */}
         <Pressable onPress={() => setLiked(!liked)} style={tw`items-center`}>
           <View style={tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center`}>
-            <SymbolView
-              tintColor={liked ? '#fbbf24' : '#ffffff'}
-              name={{
-                ios: liked ? 'star.fill' : 'star',
-                android: liked ? 'star' : 'star_border',
-                web: liked ? 'star' : 'star_border',
-              }}
-              size={26}
+            <Ionicons
+              name={liked ? "star" : "star-outline"}
+              size={24}
+              color={liked ? '#fbbf24' : '#ffffff'}
             />
           </View>
           <ThemedText style={tw`text-white text-xs font-bold mt-1`}>{likes}</ThemedText>
@@ -176,10 +172,10 @@ export function TikTokVideoItem({
         {/* Comments */}
         <Pressable style={tw`items-center`}>
           <View style={tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center`}>
-            <SymbolView
-              tintColor="#ffffff"
-              name={{ ios: 'bubble.left.fill', android: 'chat', web: 'chat' }}
+            <Ionicons
+              name="chatbubble-ellipses-outline"
               size={24}
+              color="#ffffff"
             />
           </View>
           <ThemedText style={tw`text-white text-xs font-bold mt-1`}>{comments}</ThemedText>
@@ -188,14 +184,10 @@ export function TikTokVideoItem({
         {/* Bookmark */}
         <Pressable onPress={() => setBookmarked(!bookmarked)} style={tw`items-center`}>
           <View style={tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center`}>
-            <SymbolView
-              tintColor={bookmarked ? '#eab308' : '#ffffff'}
-              name={{
-                ios: bookmarked ? 'bookmark.fill' : 'bookmark',
-                android: bookmarked ? 'bookmark' : 'bookmark_border',
-                web: bookmarked ? 'bookmark' : 'bookmark_border',
-              }}
+            <Ionicons
+              name={bookmarked ? "bookmark" : "bookmark-outline"}
               size={24}
+              color={bookmarked ? '#eab308' : '#ffffff'}
             />
           </View>
           <ThemedText style={tw`text-white text-xs font-bold mt-1`}>{shares}</ThemedText>
@@ -204,10 +196,10 @@ export function TikTokVideoItem({
         {/* Share */}
         <Pressable style={tw`items-center`}>
           <View style={tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center`}>
-            <SymbolView
-              tintColor="#ffffff"
-              name={{ ios: 'arrowshape.turn.up.right.fill', android: 'share', web: 'share' }}
+            <Ionicons
+              name="share-social-outline"
               size={24}
+              color="#ffffff"
             />
           </View>
           <ThemedText style={tw`text-white text-xs font-bold mt-1`}>Share</ThemedText>
@@ -217,14 +209,10 @@ export function TikTokVideoItem({
         {type === 'video' && (
           <Pressable onPress={toggleMute} style={tw`items-center`}>
             <View style={tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center`}>
-              <SymbolView
-                tintColor="#ffffff"
-                name={{
-                  ios: isMuted ? 'speaker.slash.fill' : 'speaker.wave.2.fill',
-                  android: isMuted ? 'volume_off' : 'volume_up',
-                  web: isMuted ? 'volume_off' : 'volume_up',
-                }}
+              <Ionicons
+                name={isMuted ? "volume-mute-outline" : "volume-high-outline"}
                 size={24}
+                color="#ffffff"
               />
             </View>
           </Pressable>
