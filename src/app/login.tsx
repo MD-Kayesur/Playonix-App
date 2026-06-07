@@ -12,7 +12,7 @@ import { useMenu } from '@/context/menu-context';
 export default function LoginScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { setIsLoggedIn, setLoginVisible } = useMenu();
+  const { setIsLoggedIn, setLoginVisible, setMenuVisible } = useMenu();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,6 +34,7 @@ export default function LoginScreen() {
       setLoading(false);
       setIsLoggedIn(true); // Toggle global logged in state
       setLoginVisible(false); // Close login screen
+      setMenuVisible(false); // Close menu drawer since they are logged in
       if (Platform.OS === 'web') {
         alert('Logged in successfully!');
       } else {

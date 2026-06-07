@@ -196,10 +196,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
             ) : (
               <Pressable
                 onPress={() => {
-                  onClose();
-                  setTimeout(() => {
-                    setLoginVisible(true);
-                  }, 250);
+                  setLoginVisible(true);
                 }}
                 style={({ pressed }) => [
                   tw`py-3 border-t border-white/5`,
