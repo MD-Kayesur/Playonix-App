@@ -69,10 +69,10 @@ export default function HomeScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const scheme = useColorScheme();
 
-  // Menu Drawer State and Animation
+  // Menu Drawer State and Animation (Left side slide-in)
   const [menuVisible, setMenuVisible] = useState(false);
   const panelWidth = Math.min(SCREEN_WIDTH * 0.75, 300);
-  const slideAnim = useRef(new Animated.Value(panelWidth)).current;
+  const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
 
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: any[] }) => {
     if (viewableItems.length > 0) {
@@ -90,7 +90,7 @@ export default function HomeScreen() {
   };
 
   const openMenu = () => {
-    slideAnim.setValue(panelWidth);
+    slideAnim.setValue(-panelWidth);
     setMenuVisible(true);
     Animated.timing(slideAnim, {
       toValue: 0,
@@ -101,7 +101,7 @@ export default function HomeScreen() {
 
   const closeMenu = () => {
     Animated.timing(slideAnim, {
-      toValue: panelWidth,
+      toValue: -panelWidth,
       duration: 250,
       useNativeDriver: true,
     }).start(() => {
@@ -115,7 +115,7 @@ export default function HomeScreen() {
     <ThemedView style={tw`flex-1 bg-black`}>
       <StatusBar style="light" />
 
-      {/* Top Left Stacked Action Buttons */}
+      {/* Top Right Stacked Action Buttons */}
       <View style={[tw`absolute right-4 z-50 gap-4`, { top: topMargin }]}>
         {/* Dark/Light Mode Toggle Button */}
         <Pressable
@@ -182,10 +182,10 @@ export default function HomeScreen() {
             style={tw`absolute inset-0 bg-black/60`}
           />
 
-          {/* Sliding Panel */}
+          {/* Sliding Panel (from Left side) */}
           <Animated.View
             style={[
-              tw`absolute top-0 bottom-0 right-0 bg-neutral-900 border-l border-white/10 p-6`,
+              tw`absolute top-0 bottom-0 left-0 bg-neutral-900 border-r border-white/10 p-6`,
               {
                 width: panelWidth,
                 transform: [{ translateX: slideAnim }],
