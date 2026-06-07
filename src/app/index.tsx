@@ -41,7 +41,7 @@ export default function HomeScreen() {
           </ThemedText>
         </ThemedView>
 
-        <ThemedText type="code" className="uppercase">
+        <ThemedText type="code" className="uppercase mt-16">
           get started
         </ThemedText>
 
