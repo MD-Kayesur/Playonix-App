@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Pressable, Animated, useWindowDimensions, Platform, Alert, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useRef, useState } from 'react';
+import { Alert, Animated, Platform, Pressable, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
 import { ThemedText } from '@/components/themed-text';
@@ -74,59 +74,65 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
         </View>
 
         {/* Menu Items */}
-        <View style={styles.menuItemsContainer}>
+        <View style={tw`gap-5`}>
           {/* All Route */}
           <Pressable
             onPress={() => onSelectFilter('all')}
             style={({ pressed }) => [
-              styles.menuItem,
-              activeFilter === 'all' && styles.activeMenuItem,
-              pressed && { opacity: 0.7 },
+              tw`py-3 border-b border-white/5`,
+              activeFilter === 'all' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+              pressed && tw`opacity-70`,
             ]}>
-            <Ionicons
-              name="grid-outline"
-              size={24}
-              color={activeFilter === 'all' ? '#fbbf24' : '#ffffff'}
-            />
-            <ThemedText style={[styles.menuItemText, activeFilter === 'all' ? { color: '#fbbf24' } : { color: '#ffffff' }]}>
-              All
-            </ThemedText>
+            <View style={tw`flex-row items-center gap-4`}>
+              <Ionicons
+                name="grid-outline"
+                size={24}
+                color={activeFilter === 'all' ? '#fbbf24' : '#ffffff'}
+              />
+              <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'all' ? tw`text-amber-400` : tw`text-white`]}>
+                All
+              </ThemedText>
+            </View>
           </Pressable>
 
           {/* Photos Route */}
           <Pressable
             onPress={() => onSelectFilter('image')}
             style={({ pressed }) => [
-              styles.menuItem,
-              activeFilter === 'image' && styles.activeMenuItem,
-              pressed && { opacity: 0.7 },
+              tw`py-3 border-b border-white/5`,
+              activeFilter === 'image' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+              pressed && tw`opacity-70`,
             ]}>
-            <Ionicons
-              name="image-outline"
-              size={24}
-              color={activeFilter === 'image' ? '#fbbf24' : '#ffffff'}
-            />
-            <ThemedText style={[styles.menuItemText, activeFilter === 'image' ? { color: '#fbbf24' } : { color: '#ffffff' }]}>
-              Photos
-            </ThemedText>
+            <View style={tw`flex-row items-center gap-4`}>
+              <Ionicons
+                name="image-outline"
+                size={24}
+                color={activeFilter === 'image' ? '#fbbf24' : '#ffffff'}
+              />
+              <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'image' ? tw`text-amber-400` : tw`text-white`]}>
+                Photos
+              </ThemedText>
+            </View>
           </Pressable>
 
           {/* Videos Route */}
           <Pressable
             onPress={() => onSelectFilter('video')}
             style={({ pressed }) => [
-              styles.menuItem,
-              activeFilter === 'video' && styles.activeMenuItem,
-              pressed && { opacity: 0.7 },
+              tw`py-3 border-b border-white/5`,
+              activeFilter === 'video' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+              pressed && tw`opacity-70`,
             ]}>
-            <Ionicons
-              name="videocam-outline"
-              size={24}
-              color={activeFilter === 'video' ? '#fbbf24' : '#ffffff'}
-            />
-            <ThemedText style={[styles.menuItemText, activeFilter === 'video' ? { color: '#fbbf24' } : { color: '#ffffff' }]}>
-              Videos
-            </ThemedText>
+            <View style={tw`flex-row items-center gap-4`}>
+              <Ionicons
+                name="videocam-outline"
+                size={24}
+                color={activeFilter === 'video' ? '#fbbf24' : '#ffffff'}
+              />
+              <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'video' ? tw`text-amber-400` : tw`text-white`]}>
+                Videos
+              </ThemedText>
+            </View>
           </Pressable>
 
           {/* Language Route */}
@@ -140,43 +146,20 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
               onClose();
             }}
             style={({ pressed }) => [
-              styles.menuItem,
-              pressed && { opacity: 0.7 },
+              tw`py-3 border-b border-white/5`,
+              pressed && tw`opacity-70`,
             ]}>
-            <Ionicons
-              name="globe-outline"
-              size={24}
-              color="#ffffff"
-            />
-            <ThemedText style={[styles.menuItemText, { color: '#ffffff' }]}>Language</ThemedText>
+            <View style={tw`flex-row items-center gap-4`}>
+              <Ionicons
+                name="globe-outline"
+                size={24}
+                color="#ffffff"
+              />
+              <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
+            </View>
           </Pressable>
         </View>
       </Animated.View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  menuItemsContainer: {
-    flexDirection: 'column',
-    gap: 20,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
-  },
-  activeMenuItem: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    marginHorizontal: -8,
-  },
-  menuItemText: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 16,
-  },
-});
