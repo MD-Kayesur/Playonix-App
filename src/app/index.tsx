@@ -1,18 +1,18 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRef, useState } from 'react';
-import { FlatList, Pressable, useWindowDimensions, Platform, Alert, View, Animated } from 'react-native';
+import { FlatList, Pressable, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
 import { ThemedView } from '@/components/themed-view';
-import { ThemedText } from '@/components/themed-text';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
+import { MenuDrawer } from '@/components/menu-drawer';
 import { setColorSchemeOverride, useColorScheme } from '@/hooks/use-color-scheme';
 import { VIDEOS } from '@/data/video-data';
 import { StatusBar } from 'expo-status-bar';
 
 export default function HomeScreen() {
-  const { height, width: SCREEN_WIDTH } = useWindowDimensions();
+  const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const itemHeight = height;
 
@@ -23,10 +23,8 @@ export default function HomeScreen() {
   const [filter, setFilter] = useState<'all' | 'video' | 'image'>('all');
   const flatListRef = useRef<FlatList>(null);
 
-  // Menu Drawer State and Animation (Left side slide-in)
+  // Menu Drawer State
   const [menuVisible, setMenuVisible] = useState(false);
-  const panelWidth = Math.min(SCREEN_WIDTH * 0.75, 300);
-  const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
 
   // Filter VIDEOS list based on active filter state
   const filteredVideos = VIDEOS.filter((item) => {
@@ -49,33 +47,13 @@ export default function HomeScreen() {
     setColorSchemeOverride(nextScheme);
   };
 
-  const openMenu = () => {
-    slideAnim.setValue(-panelWidth);
-    setMenuVisible(true);
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const closeMenu = () => {
-    Animated.timing(slideAnim, {
-      toValue: -panelWidth,
-      duration: 250,
-      useNativeDriver: true,
-    }).start(() => {
-      setMenuVisible(false);
-    });
-  };
-
   const handleSelectFilter = (newFilter: 'all' | 'video' | 'image') => {
     setFilter(newFilter);
     setActiveIndex(0);
     setTimeout(() => {
       flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
     }, 50);
-    closeMenu();
+    setMenuVisible(false);
   };
 
   const topMargin = insets.top > 0 ? insets.top + 8 : 16;
@@ -85,7 +63,7 @@ export default function HomeScreen() {
       <StatusBar style="light" />
 
       {/* Top Right Stacked Action Buttons */}
-      <View style={[tw`absolute right-4 z-50 gap-4`, { top: topMargin }]}>
+      <View style={[tw`absolute right-4 z-40 gap-4`, { top: topMargin }]}>
         {/* Dark/Light Mode Toggle Button */}
         <Pressable
           onPress={toggleTheme}
@@ -99,7 +77,7 @@ export default function HomeScreen() {
 
         {/* Hamburger Menu Button */}
         <Pressable
-          onPress={openMenu}
+          onPress={() => setMenuVisible(true)}
           style={({ pressed }) => [tw`items-center justify-center`, pressed && tw`opacity-80`]}>
           <Ionicons
             name="menu"
@@ -137,109 +115,13 @@ export default function HomeScreen() {
         decelerationRate="fast"
       />
 
-      {/* Drawer Menu Overlay */}
-      {menuVisible && (
-        <View style={tw`absolute inset-0 z-50`}>
-          {/* Backdrop */}
-          <Pressable
-            onPress={closeMenu}
-            style={tw`absolute inset-0 bg-black/60`}
-          />
-
-          {/* Sliding Panel (from Left side) */}
-          <Animated.View
-            style={[
-              tw`absolute top-0 bottom-0 left-0 bg-neutral-900 border-r border-white/10 p-6`,
-              {
-                width: panelWidth,
-                transform: [{ translateX: slideAnim }],
-                paddingTop: insets.top + 20,
-              },
-            ]}>
-            {/* Header */}
-            <View style={tw`flex-row justify-between items-center mb-8`}>
-              <ThemedText style={tw`text-white font-bold text-lg`}>Menu</ThemedText>
-              <Pressable onPress={closeMenu} style={tw`p-1`}>
-                <Ionicons
-                  name="close"
-                  size={24}
-                  color="#ffffff"
-                />
-              </Pressable>
-            </View>
-
-            {/* Menu Items */}
-            <View style={tw`gap-4`}>
-              {/* Images Route */}
-              <Pressable
-                onPress={() => handleSelectFilter('image')}
-                style={({ pressed }) => [
-                  tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
-                  pressed && tw`opacity-70`,
-                ]}>
-                <Ionicons
-                  name="image-outline"
-                  size={22}
-                  color="#ffffff"
-                />
-                <ThemedText style={tw`text-white text-base font-semibold`}>Images</ThemedText>
-              </Pressable>
-
-              {/* Videos Route */}
-              <Pressable
-                onPress={() => handleSelectFilter('video')}
-                style={({ pressed }) => [
-                  tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
-                  pressed && tw`opacity-70`,
-                ]}>
-                <Ionicons
-                  name="videocam-outline"
-                  size={22}
-                  color="#ffffff"
-                />
-                <ThemedText style={tw`text-white text-base font-semibold`}>Videos</ThemedText>
-              </Pressable>
-
-              {/* All Route */}
-              <Pressable
-                onPress={() => handleSelectFilter('all')}
-                style={({ pressed }) => [
-                  tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
-                  pressed && tw`opacity-70`,
-                ]}>
-                <Ionicons
-                  name="grid-outline"
-                  size={22}
-                  color="#ffffff"
-                />
-                <ThemedText style={tw`text-white text-base font-semibold`}>All</ThemedText>
-              </Pressable>
-
-              {/* Language Route */}
-              <Pressable
-                onPress={() => {
-                  if (Platform.OS === 'web') {
-                    alert('Language clicked!');
-                  } else {
-                    Alert.alert('Language', 'Language route clicked!');
-                  }
-                  closeMenu();
-                }}
-                style={({ pressed }) => [
-                  tw`flex-row items-center gap-4 py-3 border-b border-white/5`,
-                  pressed && tw`opacity-70`,
-                ]}>
-                <Ionicons
-                  name="globe-outline"
-                  size={22}
-                  color="#ffffff"
-                />
-                <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
-              </Pressable>
-            </View>
-          </Animated.View>
-        </View>
-      )}
+      {/* Modular Drawer Menu Overlay */}
+      <MenuDrawer
+        visible={menuVisible}
+        onClose={() => setMenuVisible(false)}
+        activeFilter={filter}
+        onSelectFilter={handleSelectFilter}
+      />
     </ThemedView>
   );
 }
