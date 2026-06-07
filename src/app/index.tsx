@@ -1,12 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { FlatList, Pressable, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLocalSearchParams } from 'expo-router';
 import tw from 'twrnc';
 
 import { ThemedView } from '@/components/themed-view';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
-import { MenuDrawer } from '@/components/menu-drawer';
 import { setColorSchemeOverride, useColorScheme } from '@/hooks/use-color-scheme';
 import { VIDEOS } from '@/data/video-data';
 import { StatusBar } from 'expo-status-bar';
@@ -19,18 +19,25 @@ export default function HomeScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const scheme = useColorScheme();
 
-  // Filtering State
-  const [filter, setFilter] = useState<'all' | 'video' | 'image'>('all');
-  const flatListRef = useRef<FlatList>(null);
+  // Read the filter parameter from the route search params
+  const params = useLocalSearchParams<{ filter?: 'all' | 'video' | 'image' }>();
+  const filter = params.filter ?? 'all';
 
-  // Menu Drawer State
-  const [menuVisible, setMenuVisible] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
 
   // Filter VIDEOS list based on active filter state
   const filteredVideos = VIDEOS.filter((item) => {
     if (filter === 'all') return true;
     return item.type === filter;
   });
+
+  // Whenever the filter changes, reset the active index and scroll the feed back to the top
+  useEffect(() => {
+    setActiveIndex(0);
+    setTimeout(() => {
+      flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
+    }, 50);
+  }, [filter]);
 
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: any[] }) => {
     if (viewableItems.length > 0) {
@@ -47,40 +54,19 @@ export default function HomeScreen() {
     setColorSchemeOverride(nextScheme);
   };
 
-  const handleSelectFilter = (newFilter: 'all' | 'video' | 'image') => {
-    setFilter(newFilter);
-    setActiveIndex(0);
-    setTimeout(() => {
-      flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
-    }, 50);
-    setMenuVisible(false);
-  };
-
   const topMargin = insets.top > 0 ? insets.top + 8 : 16;
 
   return (
     <ThemedView style={tw`flex-1 bg-black`}>
       <StatusBar style="light" />
 
-      {/* Top Right Stacked Action Buttons */}
-      <View style={[tw`absolute right-4 z-40 gap-4`, { top: topMargin }]}>
-        {/* Dark/Light Mode Toggle Button */}
+      {/* Top Right Theme Toggle Button */}
+      <View style={[tw`absolute right-4 z-40`, { top: topMargin }]}>
         <Pressable
           onPress={toggleTheme}
           style={({ pressed }) => [tw`items-center justify-center`, pressed && tw`opacity-80`]}>
           <Ionicons
             name={scheme === 'dark' ? 'sunny' : 'moon'}
-            size={24}
-            color="#ffffff"
-          />
-        </Pressable>
-
-        {/* Hamburger Menu Button */}
-        <Pressable
-          onPress={() => setMenuVisible(true)}
-          style={({ pressed }) => [tw`items-center justify-center`, pressed && tw`opacity-80`]}>
-          <Ionicons
-            name="menu"
             size={24}
             color="#ffffff"
           />
@@ -113,14 +99,6 @@ export default function HomeScreen() {
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         decelerationRate="fast"
-      />
-
-      {/* Modular Drawer Menu Overlay */}
-      <MenuDrawer
-        visible={menuVisible}
-        onClose={() => setMenuVisible(false)}
-        activeFilter={filter}
-        onSelectFilter={handleSelectFilter}
       />
     </ThemedView>
   );
