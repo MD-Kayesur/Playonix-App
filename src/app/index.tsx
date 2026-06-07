@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { FlatList, Pressable, useWindowDimensions, View, Alert, Platform } from 'react-native';
+import { FlatList, Pressable, useWindowDimensions, Alert, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SymbolView } from 'expo-symbols';
 import tw from 'twrnc';
@@ -78,50 +78,49 @@ export default function HomeScreen() {
     <ThemedView style={tw`flex-1 bg-black`}>
       <StatusBar style="light" />
 
-      {/* Top Right Actions */}
-      <View style={[tw`absolute right-4 z-50 flex-row gap-2.5`, { top: topMargin }]}>
-        {/* Dark/Light Mode Toggle Button */}
-        <Pressable
-          onPress={toggleTheme}
-          style={({ pressed }) => [
-            tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
-            pressed && tw`opacity-80`
-          ]}>
-          <SymbolView
-            tintColor="#ffffff"
-            name={{
-              ios: scheme === 'dark' ? 'sun.max.fill' : 'moon.fill',
-              android: scheme === 'dark' ? 'wb_sunny' : 'nights_stay',
-              web: scheme === 'dark' ? 'wb_sunny' : 'nights_stay'
-            }}
-            size={22}
-          />
-        </Pressable>
-
-        {/* Settings Gear Button */}
-        <Pressable
-          onPress={() => {
-            if (Platform.OS === 'web') {
-              alert('Settings menu coming soon!');
-            } else {
-              Alert.alert('Settings', 'Settings menu coming soon!');
-            }
+      {/* Dark/Light Mode Toggle Button */}
+      <Pressable
+        onPress={toggleTheme}
+        style={({ pressed }) => [
+          tw`absolute right-18 z-50 w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
+          { top: topMargin },
+          pressed && tw`opacity-80`
+        ]}>
+        <SymbolView
+          tintColor="#ffffff"
+          name={{
+            ios: scheme === 'dark' ? 'sun.max.fill' : 'moon.fill',
+            android: scheme === 'dark' ? 'wb_sunny' : 'nights_stay',
+            web: scheme === 'dark' ? 'wb_sunny' : 'nights_stay'
           }}
-          style={({ pressed }) => [
-            tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
-            pressed && tw`opacity-80`
-          ]}>
-          <SymbolView
-            tintColor="#ffffff"
-            name={{
-              ios: 'gearshape.fill',
-              android: 'settings',
-              web: 'settings'
-            }}
-            size={22}
-          />
-        </Pressable>
-      </View>
+          size={22}
+        />
+      </Pressable>
+
+      {/* Settings Gear Button */}
+      <Pressable
+        onPress={() => {
+          if (Platform.OS === 'web') {
+            alert('Settings menu coming soon!');
+          } else {
+            Alert.alert('Settings', 'Settings menu coming soon!');
+          }
+        }}
+        style={({ pressed }) => [
+          tw`absolute right-4 z-50 w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
+          { top: topMargin },
+          pressed && tw`opacity-80`
+        ]}>
+        <SymbolView
+          tintColor="#ffffff"
+          name={{
+            ios: 'gearshape.fill',
+            android: 'settings',
+            web: 'settings'
+          }}
+          size={22}
+        />
+      </Pressable>
 
       <FlatList
         data={VIDEOS}
