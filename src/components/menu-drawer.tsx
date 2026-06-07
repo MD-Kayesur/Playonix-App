@@ -16,7 +16,7 @@ interface MenuDrawerProps {
 export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: MenuDrawerProps) {
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const panelWidth = Math.min(SCREEN_WIDTH * 0.75, 300);
+  const panelWidth = Math.min(SCREEN_WIDTH * 0.79, 1000);
   
   // Animation setup
   const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
@@ -74,7 +74,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
         </View>
 
         {/* Menu Items */}
-        <View style={tw`gap-4`}>
+        <View style={tw`gap-5`}>
           {/* All Route */}
           <Pressable
             onPress={() => onSelectFilter('all')}
@@ -85,7 +85,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
             ]}>
             <Ionicons
               name="grid-outline"
-              size={22}
+              size={24}
               color={activeFilter === 'all' ? '#fbbf24' : '#ffffff'}
             />
             <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'all' ? tw`text-amber-400` : tw`text-white`]}>
@@ -103,7 +103,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
             ]}>
             <Ionicons
               name="image-outline"
-              size={22}
+              size={24}
               color={activeFilter === 'image' ? '#fbbf24' : '#ffffff'}
             />
             <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'image' ? tw`text-amber-400` : tw`text-white`]}>
@@ -121,7 +121,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
             ]}>
             <Ionicons
               name="videocam-outline"
-              size={22}
+              size={24}
               color={activeFilter === 'video' ? '#fbbf24' : '#ffffff'}
             />
             <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'video' ? tw`text-amber-400` : tw`text-white`]}>
@@ -145,7 +145,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
             ]}>
             <Ionicons
               name="globe-outline"
-              size={22}
+              size={24}
               color="#ffffff"
             />
             <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
