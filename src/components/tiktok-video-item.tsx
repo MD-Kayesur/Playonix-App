@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Pressable, Platform, Alert } from 'react-native';
+import { View, Pressable, Platform, Alert, Image } from 'react-native';
 import { useNavigation } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -13,6 +13,7 @@ interface TikTokVideoItemProps {
   videoUrl: string;
   isActive: boolean;
   username: string;
+  avatar: string;
   rating: string;
   description: string;
   likes: string;
@@ -27,6 +28,7 @@ export function TikTokVideoItem({
   videoUrl,
   isActive,
   username,
+  avatar,
   rating,
   description,
   likes,
@@ -89,7 +91,11 @@ export function TikTokVideoItem({
         <View style={tw`flex-row items-center gap-3`}>
           {/* Avatar / Logo (Rounded Square) */}
           <View style={tw`w-12 h-12 rounded-xl bg-black border border-white/10 items-center justify-center overflow-hidden`}>
-            <ThemedText style={tw`text-yellow-400 font-black text-xl`}>🎰</ThemedText>
+            {avatar ? (
+              <Image source={{ uri: avatar }} style={tw`w-full h-full`} resizeMode="cover" />
+            ) : (
+              <ThemedText style={tw`text-yellow-400 font-black text-xl`}>🎮</ThemedText>
+            )}
           </View>
           
           {/* Name & Rating Column */}

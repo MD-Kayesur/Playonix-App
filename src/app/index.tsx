@@ -8,58 +8,8 @@ import { ThemedView } from '@/components/themed-view';
 import { ThemedText } from '@/components/themed-text';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
 import { setColorSchemeOverride, useColorScheme } from '@/hooks/use-color-scheme';
+import { VIDEOS } from '@/data/video-data';
 import { StatusBar } from 'expo-status-bar';
-
-const VIDEOS = [
-  {
-    id: '1',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    username: 'Energy Casino',
-    rating: '4.4 (2 Reviews)',
-    description: 'The casino holds an MGA license and also offers a fully Finnish-language interface! **100% bonus up to €200 + 400 free spins**',
-    likes: '4.4',
-    comments: '2',
-    shares: '0',
-    buttonText: 'Claim Bonus',
-    clickUrl: 'https://playonix.gg/bonus/energy',
-  },
-  {
-    id: '2',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    username: 'Playonix Sports',
-    rating: '4.8 (12 Reviews)',
-    description: 'Get ready for the ultimate cyberpunk sports betting experience. Real-time odds and 100% match deposit bonus up to $500!',
-    likes: '4.8',
-    comments: '12',
-    shares: '3',
-    buttonText: 'Play Now',
-    clickUrl: 'https://playonix.gg/sports',
-  },
-  {
-    id: '3',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    username: 'Vegas Slots',
-    rating: '4.2 (8 Reviews)',
-    description: 'Spin to win! Over 500+ slot games with progressive jackpots. Sign up today and get 200 free spins instantly.',
-    likes: '4.2',
-    comments: '8',
-    shares: '1',
-    buttonText: 'Spin Now',
-    clickUrl: 'https://playonix.gg/slots',
-  },
-  {
-    id: '4',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    username: 'Live Blackjack',
-    rating: '4.6 (15 Reviews)',
-    description: 'Play live blackjack with professional dealers. 24/7 streaming, interactive chat, and special cashback deals.',
-    likes: '4.6',
-    comments: '15',
-    shares: '4',
-    buttonText: 'Join Table',
-    clickUrl: 'https://playonix.gg/live',
-  }
-];
 
 export default function HomeScreen() {
   const { height, width: SCREEN_WIDTH } = useWindowDimensions();
@@ -156,6 +106,7 @@ export default function HomeScreen() {
             videoUrl={item.url}
             isActive={index === activeIndex}
             username={item.username}
+            avatar={item.avatar}
             rating={item.rating}
             description={item.description}
             likes={item.likes}
