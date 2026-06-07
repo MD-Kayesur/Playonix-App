@@ -10,6 +10,7 @@ import { ThemedText } from '@/components/themed-text';
 import { BottomTabInset } from '@/constants/theme';
 
 interface TikTokVideoItemProps {
+  type: 'video' | 'image';
   videoUrl: string;
   isActive: boolean;
   username: string;
@@ -25,6 +26,7 @@ interface TikTokVideoItemProps {
 }
 
 export function TikTokVideoItem({
+  type,
   videoUrl,
   isActive,
   username,
@@ -54,18 +56,21 @@ export function TikTokVideoItem({
     };
   }, [navigation]);
 
-  const player = useVideoPlayer(videoUrl, (player) => {
-    player.loop = true;
-    player.muted = false;
+  // Safely initialize video player with a dummy URL if this item is an image type
+  const player = useVideoPlayer(type === 'video' ? videoUrl : 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', (playerInstance) => {
+    playerInstance.loop = true;
+    playerInstance.muted = false;
   });
 
   useEffect(() => {
-    if (isActive && isFocused) {
-      player.play();
-    } else {
-      player.pause();
+    if (type === 'video') {
+      if (isActive && isFocused) {
+        player.play();
+      } else {
+        player.pause();
+      }
     }
-  }, [isActive, isFocused, player]);
+  }, [isActive, isFocused, player, type]);
 
   const toggleMute = () => {
     player.muted = !player.muted;
@@ -76,13 +81,17 @@ export function TikTokVideoItem({
 
   return (
     <View style={[tw`bg-black relative justify-center items-center overflow-hidden`, { height: itemHeight }]}>
-      {/* Video View */}
-      <VideoView
-        player={player}
-        style={tw`absolute inset-0 w-full h-full`}
-        contentFit="cover"
-        nativeControls={false}
-      />
+      {/* Media View (Video or Image) */}
+      {type === 'video' ? (
+        <VideoView
+          player={player}
+          style={tw`absolute inset-0 w-full h-full`}
+          contentFit="cover"
+          nativeControls={false}
+        />
+      ) : (
+        <Image source={{ uri: videoUrl }} style={tw`absolute inset-0 w-full h-full`} resizeMode="cover" />
+      )}
 
       {/* Left Bottom Details Overlay */}
       <View style={[tw`absolute left-4 right-20 gap-3 z-30`, { bottom: bottomInset }]}>
@@ -204,20 +213,22 @@ export function TikTokVideoItem({
           <ThemedText style={tw`text-white text-xs font-bold mt-1`}>Share</ThemedText>
         </Pressable>
 
-        {/* Mute/Unmute Audio Button */}
-        <Pressable onPress={toggleMute} style={tw`items-center`}>
-          <View style={tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center`}>
-            <SymbolView
-              tintColor="#ffffff"
-              name={{
-                ios: isMuted ? 'speaker.slash.fill' : 'speaker.wave.2.fill',
-                android: isMuted ? 'volume_off' : 'volume_up',
-                web: isMuted ? 'volume_off' : 'volume_up',
-              }}
-              size={24}
-            />
-          </View>
-        </Pressable>
+        {/* Mute/Unmute Audio Button (only show if type is video) */}
+        {type === 'video' && (
+          <Pressable onPress={toggleMute} style={tw`items-center`}>
+            <View style={tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center`}>
+              <SymbolView
+                tintColor="#ffffff"
+                name={{
+                  ios: isMuted ? 'speaker.slash.fill' : 'speaker.wave.2.fill',
+                  android: isMuted ? 'volume_off' : 'volume_up',
+                  web: isMuted ? 'volume_off' : 'volume_up',
+                }}
+                size={24}
+              />
+            </View>
+          </Pressable>
+        )}
 
       </View>
     </View>

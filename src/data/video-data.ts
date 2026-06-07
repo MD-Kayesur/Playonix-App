@@ -1,5 +1,6 @@
 export interface VideoDataItem {
   id: string;
+  type: 'video' | 'image';
   url: string;
   username: string;
   avatar: string;
@@ -15,6 +16,7 @@ export interface VideoDataItem {
 export const VIDEOS: VideoDataItem[] = [
   {
     id: '1',
+    type: 'video',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     username: 'Energy Casino',
     avatar: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=100&auto=format&fit=crop',
@@ -28,7 +30,8 @@ export const VIDEOS: VideoDataItem[] = [
   },
   {
     id: '2',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+    type: 'image',
+    url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop',
     username: 'Playonix Sports',
     avatar: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=100&auto=format&fit=crop',
     rating: '4.8 (12 Reviews)',
@@ -41,6 +44,7 @@ export const VIDEOS: VideoDataItem[] = [
   },
   {
     id: '3',
+    type: 'video',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     username: 'Vegas Slots',
     avatar: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=100&auto=format&fit=crop',
@@ -54,7 +58,8 @@ export const VIDEOS: VideoDataItem[] = [
   },
   {
     id: '4',
-    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    type: 'image',
+    url: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=800&auto=format&fit=crop',
     username: 'Live Blackjack',
     avatar: 'https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=100&auto=format&fit=crop',
     rating: '4.6 (15 Reviews)',
@@ -67,6 +72,7 @@ export const VIDEOS: VideoDataItem[] = [
   },
   {
     id: '5',
+    type: 'video',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
     username: 'Cyber Poker',
     avatar: 'https://images.unsplash.com/photo-1541252260730-0412e8e2108e?w=100&auto=format&fit=crop',
@@ -77,5 +83,75 @@ export const VIDEOS: VideoDataItem[] = [
     shares: '7',
     buttonText: 'Get Chips',
     clickUrl: 'https://playonix.gg/poker',
+  },
+  {
+    id: '6',
+    type: 'image',
+    url: 'https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=800&auto=format&fit=crop',
+    username: 'Mega Jackpots',
+    avatar: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=100&auto=format&fit=crop',
+    rating: '4.5 (9 Reviews)',
+    description: 'The progressive jackpot is heating up! Current pool exceeds $2.5 Million. Spin the wheel of fortune now.',
+    likes: '4.5',
+    comments: '9',
+    shares: '2',
+    buttonText: 'Spin Wheel',
+    clickUrl: 'https://playonix.gg/jackpots',
+  },
+  {
+    id: '7',
+    type: 'video',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
+    username: 'Virtual Roulette',
+    avatar: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=100&auto=format&fit=crop',
+    rating: '4.7 (18 Reviews)',
+    description: 'Experience 3D Virtual Roulette with realistic physics, custom bets, and special bonus multipliers up to 500x!',
+    likes: '4.7',
+    comments: '18',
+    shares: '5',
+    buttonText: 'Place Bets',
+    clickUrl: 'https://playonix.gg/roulette',
+  },
+  {
+    id: '8',
+    type: 'image',
+    url: 'https://images.unsplash.com/photo-1570303345338-e1f2eddf4946?w=800&auto=format&fit=crop',
+    username: 'Baccarat Room',
+    avatar: 'https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=100&auto=format&fit=crop',
+    rating: '4.3 (7 Reviews)',
+    description: 'Enter the VIP Baccarat Room. Lowest house edge gaming, premium interface, and high limit tables available.',
+    likes: '4.3',
+    comments: '7',
+    shares: '1',
+    buttonText: 'Enter Room',
+    clickUrl: 'https://playonix.gg/baccarat',
+  },
+  {
+    id: '9',
+    type: 'video',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    username: 'Bingo Party',
+    avatar: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=100&auto=format&fit=crop',
+    rating: '4.1 (11 Reviews)',
+    description: 'Join the non-stop Bingo Party. Win big jackpots every 5 minutes and chat with a friendly global community.',
+    likes: '4.1',
+    comments: '11',
+    shares: '3',
+    buttonText: 'Buy Cards',
+    clickUrl: 'https://playonix.gg/bingo',
+  },
+  {
+    id: '10',
+    type: 'image',
+    url: 'https://images.unsplash.com/photo-1605870445919-838d190e8e1b?w=800&auto=format&fit=crop',
+    username: 'Scratch Cards',
+    avatar: 'https://images.unsplash.com/photo-1541252260730-0412e8e2108e?w=100&auto=format&fit=crop',
+    rating: '4.4 (5 Reviews)',
+    description: 'Scratch and win instantly! Match three symbols to win cash rewards, free spins, and special loyalty points.',
+    likes: '4.4',
+    comments: '5',
+    shares: '2',
+    buttonText: 'Scratch Now',
+    clickUrl: 'https://playonix.gg/scratch',
   }
 ];

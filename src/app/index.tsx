@@ -103,6 +103,7 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => (
           <TikTokVideoItem
+            type={item.type}
             videoUrl={item.url}
             isActive={index === activeIndex}
             username={item.username}
