@@ -23,6 +23,8 @@ export default function TabLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AnimatedSplashOverlay />
+      
+      <AppTabs />
 
       {/* Global Theme Toggle Button */}
       <Pressable
@@ -42,8 +44,6 @@ export default function TabLayout() {
           size={22}
         />
       </Pressable>
-
-      <AppTabs />
     </ThemeProvider>
   );
 }
