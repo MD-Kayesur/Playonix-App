@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 import tw from 'twrnc';
 
 import { MenuDrawer } from '@/components/menu-drawer';
@@ -7,15 +7,21 @@ import { ThemedView } from '@/components/themed-view';
 
 export default function MenuTabScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const params = useLocalSearchParams<{ filter?: 'all' | 'video' | 'image' }>();
   const activeFilter = params.filter ?? 'all';
 
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
-  // When this tab is focused, ensure the menu drawer opens/slides in
+  // Use navigation focus/blur listeners to trigger drawer visibility
   useEffect(() => {
-    setVisible(true);
-  }, []);
+    const unsubscribeFocus = navigation.addListener('focus', () => setVisible(true));
+    const unsubscribeBlur = navigation.addListener('blur', () => setVisible(false));
+    return () => {
+      unsubscribeFocus();
+      unsubscribeBlur();
+    };
+  }, [navigation]);
 
   const handleClose = () => {
     setVisible(false);
