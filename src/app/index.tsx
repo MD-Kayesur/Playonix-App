@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useRef, useState } from 'react';
-import { FlatList, Pressable, useWindowDimensions, Platform, Alert } from 'react-native';
+import { FlatList, Pressable, useWindowDimensions, Platform, Alert, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
@@ -13,38 +13,50 @@ const VIDEOS = [
   {
     id: '1',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    username: '@playonix_gg',
-    description: 'Welcome to Playonix! Check out this futuristic gaming environment. #playonix #cyberpunk #gaming',
-    likes: '124.5K',
-    comments: '1.2K',
-    shares: '4.8K',
+    username: 'Energy Casino',
+    rating: '4.4 (2 Reviews)',
+    description: 'The casino holds an MGA license and also offers a fully Finnish-language interface! **100% bonus up to €200 + 400 free spins**',
+    likes: '4.4',
+    comments: '2',
+    shares: '0',
+    buttonText: 'Claim Bonus',
+    clickUrl: 'https://playonix.gg/bonus/energy',
   },
   {
     id: '2',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    username: '@cyber_pro',
-    description: 'Vibe check in the neon arcade zone 🕹️ Let us know what you want to play next! #arcade #neon #vibes',
-    likes: '89.2K',
-    comments: '932',
-    shares: '2.1K',
+    username: 'Playonix Sports',
+    rating: '4.8 (12 Reviews)',
+    description: 'Get ready for the ultimate cyberpunk sports betting experience. Real-time odds and 100% match deposit bonus up to $500!',
+    likes: '4.8',
+    comments: '12',
+    shares: '3',
+    buttonText: 'Play Now',
+    clickUrl: 'https://playonix.gg/sports',
   },
   {
     id: '3',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    username: '@metro_rider',
-    description: 'Navigating through the Playonix cyberpunk underground metro system. #underground #cyber #transit',
-    likes: '45.1K',
-    comments: '421',
-    shares: '890',
+    username: 'Vegas Slots',
+    rating: '4.2 (8 Reviews)',
+    description: 'Spin to win! Over 500+ slot games with progressive jackpots. Sign up today and get 200 free spins instantly.',
+    likes: '4.2',
+    comments: '8',
+    shares: '1',
+    buttonText: 'Spin Now',
+    clickUrl: 'https://playonix.gg/slots',
   },
   {
     id: '4',
     url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    username: '@neon_runner',
-    description: 'Fast run through the light speed tunnel. Can you beat the record? ⚡ #speedrun #tunnel #fast',
-    likes: '210.7K',
-    comments: '3.4K',
-    shares: '12.6K',
+    username: 'Live Blackjack',
+    rating: '4.6 (15 Reviews)',
+    description: 'Play live blackjack with professional dealers. 24/7 streaming, interactive chat, and special cashback deals.',
+    likes: '4.6',
+    comments: '15',
+    shares: '4',
+    buttonText: 'Join Table',
+    clickUrl: 'https://playonix.gg/live',
   }
 ];
 
@@ -77,49 +89,44 @@ export default function HomeScreen() {
     <ThemedView style={tw`flex-1 bg-black`}>
       <StatusBar style="light" />
 
-      {/* Dark/Light Mode Toggle Button */}
-      <Pressable
-        onPress={toggleTheme}
-        style={({ pressed }) => [
-          tw`absolute right-18 z-50 w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
-          { top: topMargin },
-          pressed && tw`opacity-80`
-        ]}>
-        <SymbolView
-          tintColor="#ffffff"
-          name={{
-            ios: scheme === 'dark' ? 'sun.max.fill' : 'moon.fill',
-            android: scheme === 'dark' ? 'wb_sunny' : 'nights_stay',
-            web: scheme === 'dark' ? 'wb_sunny' : 'nights_stay'
-          }}
-          size={22}
-        />
-      </Pressable>
+      {/* Top Left Stacked Action Buttons */}
+      <View style={[tw`absolute right-4 z-50 gap-4`, { top: topMargin }]}>
+        {/* Dark/Light Mode Toggle Button */}
+        <Pressable
+          onPress={toggleTheme}
+          style={({ pressed }) => [tw`items-center justify-center`, pressed && tw`opacity-80`]}>
+          <SymbolView
+            tintColor="#ffffff"
+            name={{
+              ios: scheme === 'dark' ? 'sun.max.fill' : 'moon.fill',
+              android: scheme === 'dark' ? 'wb_sunny' : 'nights_stay',
+              web: scheme === 'dark' ? 'wb_sunny' : 'nights_stay'
+            }}
+            size={22}
+          />
+        </Pressable>
 
-      {/* Hamburger Menu Button */}
-      <Pressable
-        onPress={() => {
-          if (Platform.OS === 'web') {
-            alert('Menu clicked!');
-          } else {
-            Alert.alert('Menu', 'Menu clicked!');
-          }
-        }}
-        style={({ pressed }) => [
-          tw`absolute right-4 z-50 w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
-          { top: topMargin },
-          pressed && tw`opacity-80`
-        ]}>
-        <SymbolView
-          tintColor="#ffffff"
-          name={{
-            ios: 'line.3.horizontal',
-            android: 'menu',
-            web: 'menu'
+        {/* Hamburger Menu Button */}
+        <Pressable
+          onPress={() => {
+            if (Platform.OS === 'web') {
+              alert('Menu clicked!');
+            } else {
+              Alert.alert('Menu', 'Menu clicked!');
+            }
           }}
-          size={22}
-        />
-      </Pressable>
+          style={({ pressed }) => [tw`items-center justify-center`, pressed && tw`opacity-80`]}>
+          <SymbolView
+            tintColor="#ffffff"
+            name={{
+              ios: 'line.3.horizontal',
+              android: 'menu',
+              web: 'menu'
+            }}
+            size={22}
+          />
+        </Pressable>
+      </View>
 
       <FlatList
         data={VIDEOS}
@@ -129,10 +136,13 @@ export default function HomeScreen() {
             videoUrl={item.url}
             isActive={index === activeIndex}
             username={item.username}
+            rating={item.rating}
             description={item.description}
             likes={item.likes}
             comments={item.comments}
             shares={item.shares}
+            buttonText={item.buttonText}
+            clickUrl={item.clickUrl}
             itemHeight={itemHeight}
           />
         )}

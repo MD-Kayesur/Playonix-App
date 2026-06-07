@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Pressable } from 'react-native';
+import { View, Pressable, Platform, Alert } from 'react-native';
 import { useNavigation } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -13,10 +13,13 @@ interface TikTokVideoItemProps {
   videoUrl: string;
   isActive: boolean;
   username: string;
+  rating: string;
   description: string;
   likes: string;
   comments: string;
   shares: string;
+  buttonText: string;
+  clickUrl: string;
   itemHeight: number;
 }
 
@@ -24,15 +27,21 @@ export function TikTokVideoItem({
   videoUrl,
   isActive,
   username,
+  rating,
   description,
   likes,
   comments,
   shares,
+  buttonText,
+  clickUrl,
   itemHeight,
 }: TikTokVideoItemProps) {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [isFocused, setIsFocused] = useState(true);
+  const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     const unsubscribeFocus = navigation.addListener('focus', () => setIsFocused(true));
@@ -56,10 +65,11 @@ export function TikTokVideoItem({
     }
   }, [isActive, isFocused, player]);
 
-  const [liked, setLiked] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
+  const toggleMute = () => {
+    player.muted = !player.muted;
+    setIsMuted(player.muted);
+  };
 
-  // Calculate bottom offset for overlays to sit nicely above the bottom tab bar
   const bottomInset = insets.bottom + BottomTabInset + 8;
 
   return (
@@ -73,42 +83,74 @@ export function TikTokVideoItem({
       />
 
       {/* Left Bottom Details Overlay */}
-      <View style={[tw`absolute left-4 right-20 gap-2`, { bottom: bottomInset }]}>
-        <ThemedText style={tw`text-white font-bold text-base`}>{username}</ThemedText>
-        <ThemedText style={tw`text-neutral-200 text-sm`} numberOfLines={3}>
-          {description}
-        </ThemedText>
-        <View style={tw`flex-row items-center gap-2 mt-1`}>
-          <SymbolView
-            tintColor="#fff"
-            name={{ ios: 'music.note', android: 'music_note', web: 'music_note' }}
-            size={14}
-          />
-          <ThemedText style={tw`text-white text-xs font-semibold`}>Original Sound - Playonix</ThemedText>
+      <View style={[tw`absolute left-4 right-20 gap-3 z-30`, { bottom: bottomInset }]}>
+        
+        {/* Profile/Casino Info Row */}
+        <View style={tw`flex-row items-center gap-3`}>
+          {/* Avatar / Logo (Rounded Square) */}
+          <View style={tw`w-12 h-12 rounded-xl bg-black border border-white/10 items-center justify-center overflow-hidden`}>
+            <ThemedText style={tw`text-yellow-400 font-black text-xl`}>🎰</ThemedText>
+          </View>
+          
+          {/* Name & Rating Column */}
+          <View style={tw`gap-0.5`}>
+            <ThemedText style={tw`text-white font-bold text-base`}>{username}</ThemedText>
+            <View style={tw`flex-row items-center gap-1`}>
+              <SymbolView
+                tintColor="#fbbf24"
+                name={{ ios: 'star.fill', android: 'star', web: 'star' }}
+                size={14}
+              />
+              <ThemedText style={tw`text-neutral-300 text-xs font-semibold`}>{rating}</ThemedText>
+            </View>
+          </View>
         </View>
+
+        {/* Claim Bonus / CTA Button */}
+        <Pressable
+          onPress={() => {
+            if (Platform.OS === 'web') {
+              alert(`Navigating to ${clickUrl}`);
+            } else {
+              Alert.alert('Redirecting', `Opening: ${clickUrl}`);
+            }
+          }}
+          style={({ pressed }) => [
+            tw`w-full h-12 rounded-xl bg-amber-400 items-center justify-center border border-amber-300`,
+            pressed && tw`opacity-80`
+          ]}>
+          <ThemedText style={tw`text-black font-black text-base`}>{buttonText}</ThemedText>
+        </Pressable>
+
+        {/* Description Text */}
+        <View style={tw`gap-1`}>
+          <ThemedText style={tw`text-neutral-200 text-sm leading-4`} numberOfLines={2}>
+            {description}
+          </ThemedText>
+          <Pressable style={tw`flex-row items-center gap-1`}>
+            <ThemedText style={tw`text-neutral-400 text-xs font-bold`}>See More</ThemedText>
+            <SymbolView
+              tintColor="#a3a3a3"
+              name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }}
+              size={12}
+            />
+          </Pressable>
+        </View>
+
       </View>
 
       {/* Right Side Buttons Overlay */}
-      <View style={[tw`absolute right-4 gap-6 items-center`, { bottom: bottomInset + 12 }]}>
-        {/* Creator Avatar */}
-        <View style={tw`relative items-center mb-2`}>
-          <View style={tw`w-12 h-12 rounded-full border-2 border-white bg-neutral-800 items-center justify-center`}>
-            <ThemedText style={tw`text-white text-lg font-bold`}>🎮</ThemedText>
-          </View>
-          <View style={tw`absolute -bottom-1.5 bg-red-500 rounded-full px-1.5 py-0.5 border border-white`}>
-            <ThemedText style={tw`text-white text-[10px] font-bold`}>+</ThemedText>
-          </View>
-        </View>
-
-        {/* Like */}
+      <View style={[tw`absolute right-4 gap-6 items-center z-30`, { bottom: bottomInset + 12 }]}>
+        
+        {/* Rating / Star Button */}
         <Pressable onPress={() => setLiked(!liked)} style={tw`items-center`}>
           <View style={tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center`}>
             <SymbolView
-              tintColor={liked ? '#ef4444' : '#ffffff'}
+              tintColor={liked ? '#fbbf24' : '#ffffff'}
               name={{
-                ios: liked ? 'heart.fill' : 'heart',
-                android: liked ? 'favorite' : 'favorite_border',
-                web: liked ? 'favorite' : 'favorite_border',
+                ios: liked ? 'star.fill' : 'star',
+                android: liked ? 'star' : 'star_border',
+                web: liked ? 'star' : 'star_border',
               }}
               size={26}
             />
@@ -155,6 +197,22 @@ export function TikTokVideoItem({
           </View>
           <ThemedText style={tw`text-white text-xs font-bold mt-1`}>Share</ThemedText>
         </Pressable>
+
+        {/* Mute/Unmute Audio Button */}
+        <Pressable onPress={toggleMute} style={tw`items-center`}>
+          <View style={tw`w-11 h-11 rounded-full bg-black/40 items-center justify-center`}>
+            <SymbolView
+              tintColor="#ffffff"
+              name={{
+                ios: isMuted ? 'speaker.slash.fill' : 'speaker.wave.2.fill',
+                android: isMuted ? 'volume_off' : 'volume_up',
+                web: isMuted ? 'volume_off' : 'volume_up',
+              }}
+              size={24}
+            />
+          </View>
+        </Pressable>
+
       </View>
     </View>
   );
