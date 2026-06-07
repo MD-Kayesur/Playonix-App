@@ -93,7 +93,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
             </ThemedText>
           </Pressable>
 
-          {/* Images Route */}
+          {/* Photos Route */}
           <Pressable
             onPress={() => onSelectFilter('image')}
             style={({ pressed }) => [
@@ -107,7 +107,7 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
               color={activeFilter === 'image' ? '#fbbf24' : '#ffffff'}
             />
             <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'image' ? tw`text-amber-400` : tw`text-white`]}>
-              Images
+              Photos
             </ThemedText>
           </Pressable>
 
