@@ -1,6 +1,7 @@
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import tw from 'twrnc';
 
 import { AnimatedIcon } from '@/components/animated-icon';
 import { HintRow } from '@/components/hint-row';
@@ -30,22 +31,21 @@ function getDevMenuHint() {
 
 export default function HomeScreen() {
   return (
-    <ThemedView className="flex-1 justify-center flex-row">
+    <ThemedView style={tw`flex-1 justify-center flex-row`}>
       <SafeAreaView
-        className="flex-1 px-6 items-center gap-4 max-w-[800px]"
-        style={{ paddingBottom: BottomTabInset + Spacing.three }}>
-        <ThemedView className="items-center justify-center flex-1 px-6 gap-6">
+        style={[tw`flex-1 px-6 items-center gap-4 max-w-[800px]`, { paddingBottom: BottomTabInset + Spacing.three }]}>
+        <ThemedView style={tw`items-center justify-center flex-1 px-6 gap-6`}>
           <AnimatedIcon />
-          <ThemedText type="title" className="text-center">
+          <ThemedText type="title" style={tw`text-center`}>
             Welcome to&nbsp;Expo
           </ThemedText>
         </ThemedView>
 
-        <ThemedText type="code" className="uppercase mt-16">
+        <ThemedText type="code" style={tw`uppercase mt-16`}>
           get started
         </ThemedText>
 
-        <ThemedView type="backgroundElement" className="gap-4 self-stretch px-4 py-6 rounded-[24px]">
+        <ThemedView type="backgroundElement" style={tw`gap-4 self-stretch px-4 py-6 rounded-[24px]`}>
           <HintRow
             title="Try editing"
             hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
