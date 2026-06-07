@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useRef, useState } from 'react';
-import { FlatList, Pressable, useWindowDimensions } from 'react-native';
+import { FlatList, Pressable, useWindowDimensions, Platform, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
@@ -81,7 +81,7 @@ export default function HomeScreen() {
       <Pressable
         onPress={toggleTheme}
         style={({ pressed }) => [
-          tw`absolute right-4 z-50 w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
+          tw`absolute right-18 z-50 w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
           { top: topMargin },
           pressed && tw`opacity-80`
         ]}>
@@ -91,6 +91,31 @@ export default function HomeScreen() {
             ios: scheme === 'dark' ? 'sun.max.fill' : 'moon.fill',
             android: scheme === 'dark' ? 'wb_sunny' : 'nights_stay',
             web: scheme === 'dark' ? 'wb_sunny' : 'nights_stay'
+          }}
+          size={22}
+        />
+      </Pressable>
+
+      {/* Hamburger Menu Button */}
+      <Pressable
+        onPress={() => {
+          if (Platform.OS === 'web') {
+            alert('Menu clicked!');
+          } else {
+            Alert.alert('Menu', 'Menu clicked!');
+          }
+        }}
+        style={({ pressed }) => [
+          tw`absolute right-4 z-50 w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
+          { top: topMargin },
+          pressed && tw`opacity-80`
+        ]}>
+        <SymbolView
+          tintColor="#ffffff"
+          name={{
+            ios: 'line.3.horizontal',
+            android: 'menu',
+            web: 'menu'
           }}
           size={22}
         />
