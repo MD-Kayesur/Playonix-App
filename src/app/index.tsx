@@ -1,18 +1,19 @@
+import { SymbolView } from 'expo-symbols';
 import { useRef, useState } from 'react';
-import { FlatList, useWindowDimensions } from 'react-native';
+import { FlatList, Pressable, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
 import { ThemedView } from '@/components/themed-view';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
-import { ThemeToggle } from '@/components/theme-toggle';
 import { BottomTabInset } from '@/constants/theme';
+import { setColorSchemeOverride, useColorScheme } from '@/hooks/use-color-scheme';
 import { StatusBar } from 'expo-status-bar';
 
 const VIDEOS = [
   {
     id: '1',
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-in-a-futuristic-city-34359-large.mp4',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     username: '@playonix_gg',
     description: 'Welcome to Playonix! Check out this futuristic gaming environment. #playonix #cyberpunk #gaming',
     likes: '124.5K',
@@ -21,7 +22,7 @@ const VIDEOS = [
   },
   {
     id: '2',
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-woman-dancing-in-front-of-a-neon-sign-34336-large.mp4',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
     username: '@cyber_pro',
     description: 'Vibe check in the neon arcade zone 🕹️ Let us know what you want to play next! #arcade #neon #vibes',
     likes: '89.2K',
@@ -30,7 +31,7 @@ const VIDEOS = [
   },
   {
     id: '3',
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-subway-station-with-neon-lights-34357-large.mp4',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     username: '@metro_rider',
     description: 'Navigating through the Playonix cyberpunk underground metro system. #underground #cyber #transit',
     likes: '45.1K',
@@ -39,7 +40,7 @@ const VIDEOS = [
   },
   {
     id: '4',
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-neon-light-from-a-futuristic-tunnel-34356-large.mp4',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
     username: '@neon_runner',
     description: 'Fast run through the light speed tunnel. Can you beat the record? ⚡ #speedrun #tunnel #fast',
     likes: '210.7K',
@@ -54,6 +55,7 @@ export default function HomeScreen() {
   const itemHeight = height - insets.top - insets.bottom - BottomTabInset;
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const scheme = useColorScheme();
 
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: any[] }) => {
     if (viewableItems.length > 0) {
@@ -65,10 +67,36 @@ export default function HomeScreen() {
     itemVisiblePercentThreshold: 50,
   }).current;
 
+  const toggleTheme = () => {
+    const nextScheme = scheme === 'dark' ? 'light' : 'dark';
+    setColorSchemeOverride(nextScheme);
+  };
+
+  const topMargin = insets.top > 0 ? insets.top + 8 : 16;
+
   return (
     <ThemedView style={tw`flex-1 bg-black`}>
       <StatusBar style="light" />
-      <ThemeToggle />
+
+      {/* Dark/Light Mode Toggle Button */}
+      <Pressable
+        onPress={toggleTheme}
+        style={({ pressed }) => [
+          tw`absolute right-4 z-50 w-11 h-11 rounded-full bg-black/40 items-center justify-center border border-white/10`,
+          { top: topMargin },
+          pressed && tw`opacity-80`
+        ]}>
+        <SymbolView
+          tintColor="#ffffff"
+          name={{
+            ios: scheme === 'dark' ? 'sun.max.fill' : 'moon.fill',
+            android: scheme === 'dark' ? 'wb_sunny' : 'nights_stay',
+            web: scheme === 'dark' ? 'wb_sunny' : 'nights_stay'
+          }}
+          size={22}
+        />
+      </Pressable>
+
       <FlatList
         data={VIDEOS}
         keyExtractor={(item) => item.id}
