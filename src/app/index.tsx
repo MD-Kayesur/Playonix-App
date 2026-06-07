@@ -6,7 +6,6 @@ import tw from 'twrnc';
 
 import { ThemedView } from '@/components/themed-view';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
-import { BottomTabInset } from '@/constants/theme';
 import { setColorSchemeOverride, useColorScheme } from '@/hooks/use-color-scheme';
 import { StatusBar } from 'expo-status-bar';
 
@@ -52,7 +51,7 @@ const VIDEOS = [
 export default function HomeScreen() {
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const itemHeight = height - insets.top - insets.bottom - BottomTabInset;
+  const itemHeight = height;
 
   const [activeIndex, setActiveIndex] = useState(0);
   const scheme = useColorScheme();

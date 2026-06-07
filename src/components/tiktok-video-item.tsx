@@ -3,9 +3,11 @@ import { View, Pressable } from 'react-native';
 import { useNavigation } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { useVideoPlayer, VideoView } from 'expo-video';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
 import { ThemedText } from '@/components/themed-text';
+import { BottomTabInset } from '@/constants/theme';
 
 interface TikTokVideoItemProps {
   videoUrl: string;
@@ -29,6 +31,7 @@ export function TikTokVideoItem({
   itemHeight,
 }: TikTokVideoItemProps) {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const [isFocused, setIsFocused] = useState(true);
 
   useEffect(() => {
@@ -56,6 +59,9 @@ export function TikTokVideoItem({
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
+  // Calculate bottom offset for overlays to sit nicely above the bottom tab bar
+  const bottomInset = insets.bottom + BottomTabInset + 8;
+
   return (
     <View style={[tw`bg-black relative justify-center items-center overflow-hidden`, { height: itemHeight }]}>
       {/* Video View */}
@@ -67,7 +73,7 @@ export function TikTokVideoItem({
       />
 
       {/* Left Bottom Details Overlay */}
-      <View style={tw`absolute bottom-4 left-4 right-20 gap-2`}>
+      <View style={[tw`absolute left-4 right-20 gap-2`, { bottom: bottomInset }]}>
         <ThemedText style={tw`text-white font-bold text-base`}>{username}</ThemedText>
         <ThemedText style={tw`text-neutral-200 text-sm`} numberOfLines={3}>
           {description}
@@ -83,7 +89,7 @@ export function TikTokVideoItem({
       </View>
 
       {/* Right Side Buttons Overlay */}
-      <View style={tw`absolute bottom-6 right-4 gap-6 items-center`}>
+      <View style={[tw`absolute right-4 gap-6 items-center`, { bottom: bottomInset + 12 }]}>
         {/* Creator Avatar */}
         <View style={tw`relative items-center mb-2`}>
           <View style={tw`w-12 h-12 rounded-full border-2 border-white bg-neutral-800 items-center justify-center`}>
