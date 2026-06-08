@@ -1,12 +1,13 @@
-// src/components/ui/CustomInput.tsx
 import React from 'react';
-import { View, TextInput, TextInputProps } from 'react-native';
+import { View, TextInput, TextInputProps, StyleProp, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import tw from 'twrnc';
 import { useTheme } from '@/components/theme/ThemeProvider';
 
-interface CustomInputProps extends TextInputProps {
+// We omit the default text style type and replace it with a ViewStyle type for the outer container
+interface CustomInputProps extends Omit<TextInputProps, 'style'> {
   iconName?: keyof typeof Ionicons.glyphMap;
+  style?: StyleProp<ViewStyle>; 
 }
 
 export function CustomInput({ iconName = "mail-outline", style, ...props }: CustomInputProps) {
@@ -14,7 +15,6 @@ export function CustomInput({ iconName = "mail-outline", style, ...props }: Cust
   const isDark = theme === 'dark';
 
   return (
-    // Any structural or positioning styles passed down now attach here safely
     <View
       style={[
         tw`flex-row items-center w-full h-12 px-4 rounded-xl border`,
@@ -24,7 +24,6 @@ export function CustomInput({ iconName = "mail-outline", style, ...props }: Cust
         style, 
       ]}
     >
-      {/* Search/Mail Icon */}
       <Ionicons
         name={iconName}
         size={18}
@@ -32,7 +31,6 @@ export function CustomInput({ iconName = "mail-outline", style, ...props }: Cust
         style={tw`mr-2`}
       />
 
-      {/* Actual Input Text Field */}
       <TextInput
         placeholderTextColor={isDark ? '#525252' : '#a3a3a3'}
         style={[
