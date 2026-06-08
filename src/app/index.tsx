@@ -11,18 +11,19 @@ import { useMenu } from '@/context/menu-context';
 import { VIDEOS } from '@/data/video-data';
 import { StatusBar } from 'expo-status-bar';
 
-// Use your custom theme hook
 import { useTheme } from '@/components/theme/ThemeProvider';
 import ThemeButton from '@/components/theme/ThemeButton';
+import { CustomInput } from '@/components/CustomInput';
+// Correct import path to find the component where it's located in your file tree
 
 export default function HomeScreen() {
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const itemHeight = height;
-
+  
+  const [search, setSearch] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   
-  // Connect to your custom Theme state
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -51,15 +52,27 @@ export default function HomeScreen() {
     itemVisiblePercentThreshold: 50,
   }).current;
 
+  // Use this margin on the unified container block below
   const topMargin = insets.top > 0 ? insets.top + 8 : 16;
 
   return (
-    // Dynamic background style based on theme state
     <ThemedView style={[tw`flex-1`, { backgroundColor: isDark ? "#000000" : "#ffffff" }]}>
       <StatusBar style={isDark ? "light" : "dark"} />
 
-      {/* Floating Theme Toggle Button over your view */}
-      <View style={[tw`absolute right-4 z-40`, { top: topMargin }]}>
+      {/* Clean Header Bar Overlay */}
+      <View style={[tw`absolute left-4 right-4 z-40 flex-row items-center gap-3`, { top: topMargin }]}>
+        
+        {/* Search Field takes up the main space */}
+        <View style={tw`flex-1`}>
+          <CustomInput
+            iconName="search-outline"
+            placeholder="Search here..."
+            value={search}
+            onChangeText={setSearch}
+          />
+        </View>
+
+        {/* Theme Toggle sits right next to it */}
         <ThemeButton />
       </View>
 
