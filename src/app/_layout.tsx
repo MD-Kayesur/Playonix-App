@@ -1,3 +1,4 @@
+ 
 // src/app/_layout.tsx
 import { DarkTheme, DefaultTheme, ThemeProvider as ExpoNavigationProvider } from 'expo-router';
 import { View, StyleSheet } from 'react-native';

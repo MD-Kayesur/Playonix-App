@@ -1,3 +1,4 @@
+// src/components/ui/menu-drawer.tsx
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, Animated, Platform, Pressable, useWindowDimensions, View } from 'react-native';
@@ -6,6 +7,7 @@ import tw from 'twrnc';
 
 import { ThemedText } from '@/components/theme/themed-text';
 import { useMenu } from '@/context/menu-context';
+import { router } from 'expo-router';
 
 interface MenuDrawerProps {
   visible: boolean;
@@ -19,10 +21,8 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
   const insets = useSafeAreaInsets();
   const panelWidth = Math.min(SCREEN_WIDTH * 0.79, 1000);
   
-  // Consume global authentication and visibility state
   const { isLoggedIn, setIsLoggedIn, setLoginVisible } = useMenu();
   
-  // Animation setup
   const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
   const [shouldRender, setShouldRender] = useState(visible);
 
@@ -32,13 +32,13 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
       Animated.timing(slideAnim, {
         toValue: 0,
         duration: 300,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS !== 'web', 
       }).start();
     } else {
       Animated.timing(slideAnim, {
         toValue: -panelWidth,
         duration: 250,
-        useNativeDriver: true,
+        useNativeDriver: Platform.OS !== 'web',
       }).start(() => {
         setShouldRender(false);
       });
@@ -50,12 +50,9 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
   return (
     <View style={tw`absolute inset-0 z-50`}>
       {/* Backdrop */}
-      <Pressable
-        onPress={onClose}
-        style={tw`absolute inset-0 bg-black/60`}
-      />
+      <Pressable onPress={onClose} style={tw`absolute inset-0 bg-black/60`} />
 
-      {/* Sliding Panel (from Left side) */}
+      {/* Sliding Panel */}
       <Animated.View
         style={[
           tw`absolute top-0 bottom-0 left-0 bg-neutral-900 border-r border-white/10 p-6`,
@@ -66,25 +63,25 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
             paddingBottom: insets.bottom + 20,
           },
         ]}>
+        
         {/* Header */}
         <View style={tw`flex-row justify-between items-center mb-8`}>
           <ThemedText style={tw`text-white font-bold text-lg`}>Menu</ThemedText>
           <Pressable onPress={onClose} style={tw`p-1`}>
-            <Ionicons
-              name="close"
-              size={24}
-              color="#ffffff"
-            />
+            <Ionicons name="close" size={24} color="#ffffff" />
           </Pressable>
         </View>
 
-        {/* Content Container (flex-1 to push login/logout to the bottom) */}
+        {/* Content Container */}
         <View style={tw`flex-1 justify-between`}>
-          {/* Main Menu Routes */}
           <View style={tw`gap-5`}>
-            {/* All Route */}
+            
+            {/* All Filter Route */}
             <Pressable
-              onPress={() => onSelectFilter('all')}
+              onPress={() => {
+                onSelectFilter('all');
+                onClose();
+              }}
               style={({ pressed }) => [
                 tw`py-3 border-b border-white/5`,
                 activeFilter === 'all' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
@@ -102,9 +99,12 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
               </View>
             </Pressable>
 
-            {/* Photos Route */}
+            {/* Photos Filter Route */}
             <Pressable
-              onPress={() => onSelectFilter('image')}
+              onPress={() => {
+                onSelectFilter('image');
+                onClose();
+              }}
               style={({ pressed }) => [
                 tw`py-3 border-b border-white/5`,
                 activeFilter === 'image' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
@@ -122,9 +122,12 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
               </View>
             </Pressable>
 
-            {/* Videos Route */}
+            {/* Videos Filter Route */}
             <Pressable
-              onPress={() => onSelectFilter('video')}
+              onPress={() => {
+                onSelectFilter('video');
+                onClose();
+              }}
               style={({ pressed }) => [
                 tw`py-3 border-b border-white/5`,
                 activeFilter === 'video' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
@@ -142,27 +145,21 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
               </View>
             </Pressable>
 
-            {/* Language Route */}
+            {/* Clean Language Redirection Link */}
             <Pressable
               onPress={() => {
-                if (Platform.OS === 'web') {
-                  alert('Language clicked!');
-                } else {
-                  Alert.alert('Language', 'Language route clicked!');
-                }
                 onClose();
+                router.push('/languages'); // Redirects to your root app/languages file cleanly
               }}
               style={({ pressed }) => [
                 tw`py-3 border-b border-white/5`,
                 pressed && tw`opacity-70`,
               ]}>
               <View style={tw`flex-row items-center gap-4`}>
-                <Ionicons
-                  name="globe-outline"
-                  size={24}
-                  color="#ffffff"
-                />
-                <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
+                <Ionicons name="globe-outline" size={24} color="#ffffff" />
+                <ThemedText style={tw`text-white text-base font-semibold`}>
+                  Language
+                </ThemedText>
               </View>
             </Pressable>
           </View>
@@ -185,17 +182,14 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
                   pressed && tw`opacity-70`,
                 ]}>
                 <View style={tw`flex-row items-center gap-4`}>
-                  <Ionicons
-                    name="log-out-outline"
-                    size={24}
-                    color="#ef4444"
-                  />
+                  <Ionicons name="log-out-outline" size={24} color="#ef4444" />
                   <ThemedText style={tw`text-red-500 text-base font-semibold`}>Logout</ThemedText>
                 </View>
               </Pressable>
             ) : (
               <Pressable
                 onPress={() => {
+                  onClose();
                   setLoginVisible(true);
                 }}
                 style={({ pressed }) => [
@@ -203,18 +197,228 @@ export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: M
                   pressed && tw`opacity-70`,
                 ]}>
                 <View style={tw`flex-row items-center gap-4`}>
-                  <Ionicons
-                    name="log-in-outline"
-                    size={24}
-                    color="#ffffff"
-                  />
+                  <Ionicons name="log-in-outline" size={24} color="#ffffff" />
                   <ThemedText style={tw`text-white text-base font-semibold`}>Login</ThemedText>
                 </View>
               </Pressable>
             )}
           </View>
+
         </View>
       </Animated.View>
     </View>
   );
 }
+
+
+
+
+// // src/components/ui/menu-drawer.tsx
+// import { Ionicons } from '@expo/vector-icons';
+// import { useEffect, useRef, useState } from 'react';
+// import { Alert, Animated, Platform, Pressable, useWindowDimensions, View } from 'react-native';
+// import { useSafeAreaInsets } from 'react-native-safe-area-context';
+// import tw from 'twrnc';
+
+// import { ThemedText } from '@/components/theme/themed-text';
+// import { useMenu } from '@/context/menu-context';
+// import { router } from 'expo-router';
+
+// interface MenuDrawerProps {
+//   visible: boolean;
+//   onClose: () => void;
+//   activeFilter: 'all' | 'video' | 'image';
+//   onSelectFilter: (filter: 'all' | 'video' | 'image') => void;
+// }
+
+// export function MenuDrawer({ visible, onClose, activeFilter, onSelectFilter }: MenuDrawerProps) {
+//   const { width: SCREEN_WIDTH } = useWindowDimensions();
+//   const insets = useSafeAreaInsets();
+//   const panelWidth = Math.min(SCREEN_WIDTH * 0.79, 1000);
+  
+//   const { isLoggedIn, setIsLoggedIn, setLoginVisible } = useMenu();
+  
+//   const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
+//   const [shouldRender, setShouldRender] = useState(visible);
+
+//   useEffect(() => {
+//     if (visible) {
+//       setShouldRender(true);
+//       Animated.timing(slideAnim, {
+//         toValue: 0,
+//         duration: 300,
+//         useNativeDriver: Platform.OS !== 'web', 
+//       }).start();
+//     } else {
+//       Animated.timing(slideAnim, {
+//         toValue: -panelWidth,
+//         duration: 250,
+//         useNativeDriver: Platform.OS !== 'web',
+//       }).start(() => {
+//         setShouldRender(false);
+//       });
+//     }
+//   }, [visible, panelWidth, slideAnim]);
+
+//   if (!shouldRender) return null;
+
+//   return (
+//     <View style={tw`absolute inset-0 z-50`}>
+//       {/* Backdrop */}
+//       <Pressable onPress={onClose} style={tw`absolute inset-0 bg-black/60`} />
+
+//       {/* Sliding Panel */}
+//       <Animated.View
+//         style={[
+//           tw`absolute top-0 bottom-0 left-0 bg-neutral-900 border-r border-white/10 p-6`,
+//           {
+//             width: panelWidth,
+//             transform: [{ translateX: slideAnim }],
+//             paddingTop: insets.top + 20,
+//             paddingBottom: insets.bottom + 20,
+//           },
+//         ]}>
+        
+//         {/* Header */}
+//         <View style={tw`flex-row justify-between items-center mb-8`}>
+//           <ThemedText style={tw`text-white font-bold text-lg`}>Menu</ThemedText>
+//           <Pressable onPress={onClose} style={tw`p-1`}>
+//             <Ionicons name="close" size={24} color="#ffffff" />
+//           </Pressable>
+//         </View>
+
+//         {/* Content Container */}
+//         <View style={tw`flex-1 justify-between`}>
+//           <View style={tw`gap-5`}>
+            
+//             {/* All Route */}
+//             <Pressable
+//               onPress={() => {
+//                 onSelectFilter('all');
+//                 onClose();
+//               }}
+//               style={({ pressed }) => [
+//                 tw`py-3 border-b border-white/5`,
+//                 activeFilter === 'all' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+//                 pressed && tw`opacity-70`,
+//               ]}>
+//               <View style={tw`flex-row items-center gap-4`}>
+//                 <Ionicons
+//                   name="grid-outline"
+//                   size={24}
+//                   color={activeFilter === 'all' ? '#fbbf24' : '#ffffff'}
+//                 />
+//                 <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'all' ? tw`text-amber-400` : tw`text-white`]}>
+//                   All
+//                 </ThemedText>
+//               </View>
+//             </Pressable>
+
+//             {/* Photos Route */}
+//             <Pressable
+//               onPress={() => {
+//                 onSelectFilter('image');
+//                 onClose();
+//               }}
+//               style={({ pressed }) => [
+//                 tw`py-3 border-b border-white/5`,
+//                 activeFilter === 'image' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+//                 pressed && tw`opacity-70`,
+//               ]}>
+//               <View style={tw`flex-row items-center gap-4`}>
+//                 <Ionicons
+//                   name="image-outline"
+//                   size={24}
+//                   color={activeFilter === 'image' ? '#fbbf24' : '#ffffff'}
+//                 />
+//                 <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'image' ? tw`text-amber-400` : tw`text-white`]}>
+//                   Photos
+//                 </ThemedText>
+//               </View>
+//             </Pressable>
+
+//             {/* Videos Route */}
+//             <Pressable
+//               onPress={() => {
+//                 onSelectFilter('video');
+//                 onClose();
+//               }}
+//               style={({ pressed }) => [
+//                 tw`py-3 border-b border-white/5`,
+//                 activeFilter === 'video' && tw`bg-white/5 rounded-lg px-2 -mx-2`,
+//                 pressed && tw`opacity-70`,
+//               ]}>
+//               <View style={tw`flex-row items-center gap-4`}>
+//                 <Ionicons
+//                   name="videocam-outline"
+//                   size={24}
+//                   color={activeFilter === 'video' ? '#fbbf24' : '#ffffff'}
+//                 />
+//                 <ThemedText style={[tw`text-base font-semibold`, activeFilter === 'video' ? tw`text-amber-400` : tw`text-white`]}>
+//                   Videos
+//                 </ThemedText>
+//               </View>
+//             </Pressable>
+
+//             {/* Language Redirection Route */}
+//           <Pressable
+//   onPress={() => {
+//     onClose(); // Close the menu drawer first so it's hidden when returning
+//     router.push('/languages'); // Redirects to root screen layout
+//   }}
+//   style={({ pressed }) => [
+//     tw`py-3 border-b border-white/5`,
+//     pressed && tw`opacity-70`,
+//   ]}>
+//   <View style={tw`flex-row items-center gap-4`}>
+//     <Ionicons name="globe-outline" size={24} color="#ffffff" />
+//     <ThemedText style={tw`text-white text-base font-semibold`}>Language</ThemedText>
+//   </View>
+// </Pressable>
+//           </View>
+
+//           {/* Bottom Action: Login or Logout */}
+//           <View style={tw`mt-auto`}>
+//             {isLoggedIn ? (
+//               <Pressable
+//                 onPress={() => {
+//                   setIsLoggedIn(false);
+//                   onClose();
+//                   if (Platform.OS === 'web') {
+//                     alert('Logged out successfully!');
+//                   } else {
+//                     Alert.alert('Success', 'Logged out successfully!');
+//                   }
+//                 }}
+//                 style={({ pressed }) => [
+//                   tw`py-3 border-t border-white/5`,
+//                   pressed && tw`opacity-70`,
+//                 ]}>
+//                 <View style={tw`flex-row items-center gap-4`}>
+//                   <Ionicons name="log-out-outline" size={24} color="#ef4444" />
+//                   <ThemedText style={tw`text-red-500 text-base font-semibold`}>Logout</ThemedText>
+//                 </View>
+//               </Pressable>
+//             ) : (
+//               <Pressable
+//                 onPress={() => {
+//                   onClose();
+//                   setLoginVisible(true);
+//                 }}
+//                 style={({ pressed }) => [
+//                   tw`py-3 border-t border-white/5`,
+//                   pressed && tw`opacity-70`,
+//                 ]}>
+//                 <View style={tw`flex-row items-center gap-4`}>
+//                   <Ionicons name="log-in-outline" size={24} color="#ffffff" />
+//                   <ThemedText style={tw`text-white text-base font-semibold`}>Login</ThemedText>
+//                 </View>
+//               </Pressable>
+//             )}
+//           </View>
+
+//         </View>
+//       </Animated.View>
+//     </View>
+//   );
+// }
