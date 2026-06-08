@@ -1,5 +1,6 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import { useColorScheme, View, StyleSheet } from 'react-native';
+// src/app/_layout.tsx
+import { DarkTheme, DefaultTheme, ThemeProvider as ExpoNavigationProvider } from 'expo-router';
+import { View, StyleSheet } from 'react-native';
 
 import '../global.css';
 
@@ -8,12 +9,16 @@ import AppTabs from '@/components/app-tabs';
 import { MenuProvider, useMenu } from '@/context/menu-context';
 import LoginScreen from './login';
 
+// Import your custom ThemeProvider and hook
+import { ThemeProvider, useTheme } from '@/components/theme/ThemeProvider';
+
 function AppContent() {
-  const colorScheme = useColorScheme();
   const { loginVisible } = useMenu();
+  // Get manual theme state from your custom context
+  const { theme } = useTheme(); 
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ExpoNavigationProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
       <AnimatedSplashOverlay />
       <View style={{ flex: 1 }}>
         <AppTabs />
@@ -23,14 +28,17 @@ function AppContent() {
           </View>
         )}
       </View>
-    </ThemeProvider>
+    </ExpoNavigationProvider>
   );
 }
 
 export default function TabLayout() {
   return (
     <MenuProvider>
-      <AppContent />
+      {/* Your custom manual provider goes on the absolute top */}
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
     </MenuProvider>
   );
 }

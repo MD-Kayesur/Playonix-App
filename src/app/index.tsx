@@ -1,6 +1,6 @@
-import { Ionicons } from '@expo/vector-icons';
+// src/app/index.tsx
 import { useRef, useState, useEffect } from 'react';
-import { FlatList, Pressable, useWindowDimensions, View } from 'react-native';
+import { FlatList, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
@@ -8,9 +8,12 @@ import { ThemedView } from '@/components/theme/themed-view';
 import { TikTokVideoItem } from '@/components/tiktok-video-item';
 import { MenuDrawer } from '@/components/menu-drawer';
 import { useMenu } from '@/context/menu-context';
-import { setColorSchemeOverride, useColorScheme } from '@/hooks/use-color-scheme';
 import { VIDEOS } from '@/data/video-data';
 import { StatusBar } from 'expo-status-bar';
+
+// Use your custom theme hook
+import { useTheme } from '@/components/theme/ThemeProvider';
+import ThemeButton from '@/components/theme/ThemeButton';
 
 export default function HomeScreen() {
   const { height } = useWindowDimensions();
@@ -18,20 +21,19 @@ export default function HomeScreen() {
   const itemHeight = height;
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const scheme = useColorScheme();
+  
+  // Connect to your custom Theme state
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
-  // Consume the global menu state from context
   const { menuVisible, setMenuVisible, filter, setFilter } = useMenu();
-
   const flatListRef = useRef<FlatList>(null);
 
-  // Filter VIDEOS list based on active filter state
   const filteredVideos = VIDEOS.filter((item) => {
     if (filter === 'all') return true;
     return item.type === filter;
   });
 
-  // Whenever the filter changes, reset the active index and scroll the feed back to the top
   useEffect(() => {
     setActiveIndex(0);
     setTimeout(() => {
@@ -49,28 +51,16 @@ export default function HomeScreen() {
     itemVisiblePercentThreshold: 50,
   }).current;
 
-  const toggleTheme = () => {
-    const nextScheme = scheme === 'dark' ? 'light' : 'dark';
-    setColorSchemeOverride(nextScheme);
-  };
-
   const topMargin = insets.top > 0 ? insets.top + 8 : 16;
 
   return (
-    <ThemedView style={tw`flex-1 bg-black`}>
-      <StatusBar style="light" />
+    // Dynamic background style based on theme state
+    <ThemedView style={[tw`flex-1`, { backgroundColor: isDark ? "#000000" : "#ffffff" }]}>
+      <StatusBar style={isDark ? "light" : "dark"} />
 
-      {/* Top Right Theme Toggle Button */}
+      {/* Floating Theme Toggle Button over your view */}
       <View style={[tw`absolute right-4 z-40`, { top: topMargin }]}>
-        <Pressable
-          onPress={toggleTheme}
-          style={({ pressed }) => [tw`items-center justify-center`, pressed && tw`opacity-80`]}>
-          <Ionicons
-            name={scheme === 'dark' ? 'sunny' : 'moon'}
-            size={24}
-            color="#ffffff"
-          />
-        </Pressable>
+        <ThemeButton />
       </View>
 
       <FlatList
@@ -101,7 +91,6 @@ export default function HomeScreen() {
         decelerationRate="fast"
       />
 
-      {/* Render MenuDrawer overlay directly on top of the HomeScreen */}
       <MenuDrawer
         visible={menuVisible}
         onClose={() => setMenuVisible(false)}

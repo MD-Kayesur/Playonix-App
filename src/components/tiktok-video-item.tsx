@@ -13,6 +13,7 @@ interface TikTokVideoItemProps {
   type: 'video' | 'image';
   videoUrl: string;
   isActive: boolean;
+  
   username: string;
   avatar: string;
   rating: string;
@@ -21,7 +22,7 @@ interface TikTokVideoItemProps {
   comments: string;
   shares: string;
   buttonText: string;
-  clickUrl: string;
+  clickUrl: string | null;
   itemHeight: number;
 }
 
@@ -35,6 +36,7 @@ export function TikTokVideoItem({
   description,
   likes,
   comments,
+  
   shares,
   buttonText,
   clickUrl,
