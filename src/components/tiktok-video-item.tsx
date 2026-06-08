@@ -127,7 +127,7 @@ export function TikTokVideoItem({
           
           {/* Name & Rating Column */}
           <View style={tw`gap-0.5`}>
-            <ThemedText style={tw`${mainTextColor} font-bold text-base`}>{username}</ThemedText>
+            <ThemedText style={tw`text-white font-bold text-base`}>{username}</ThemedText>
             <View style={tw`flex-row items-center gap-1`}>
               <Ionicons name="star" size={14} color="#fbbf24" />
               <ThemedText style={tw`${subTextColor} text-xs font-semibold`}>{rating}</ThemedText>
@@ -148,16 +148,16 @@ export function TikTokVideoItem({
             tw`w-full h-12 rounded-xl bg-amber-400 items-center justify-center border border-amber-300`,
             pressed && tw`opacity-80`
           ]}>
-          <ThemedText style={tw`text-black font-black text-base`}>{buttonText}</ThemedText>
+          <ThemedText style={tw`text-white font-black text-base`}>{buttonText}</ThemedText>
         </Pressable>
 
         {/* Description Text */}
         <View style={tw`gap-1`}>
-          <ThemedText style={tw`${descTextColor} text-sm leading-4`} numberOfLines={2}>
+          <ThemedText style={tw`text-white text-sm leading-4`} numberOfLines={2}>
             {description}
           </ThemedText>
           <Pressable style={tw`flex-row items-center gap-1`}>
-            <ThemedText style={tw`${isDark ? 'text-neutral-400' : 'text-neutral-500'} text-xs font-bold`}>See More</ThemedText>
+            <ThemedText style={tw`text-white text-xs font-bold`}>See More</ThemedText>
             <Ionicons name="chevron-forward" size={12} color={isDark ? "#a3a3a3" : "#525252"} />
           </Pressable>
         </View>
@@ -176,7 +176,7 @@ export function TikTokVideoItem({
               color={liked ? '#fbbf24' : iconColor}
             />
           </View>
-          <ThemedText style={tw`${mainTextColor} text-xs font-bold mt-1`}>{likes}</ThemedText>
+          <ThemedText style={tw`text-white text-xs font-bold mt-1`}>{likes}</ThemedText>
         </Pressable>
 
         {/* Comments */}
